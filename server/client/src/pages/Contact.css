@@ -1,0 +1,68 @@
+/* Contact card look */
+.cardish {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+/* Fields + labels + errors */
+.field { display: grid; gap: 6px; }
+.label { font-size: 14px; color: var(--muted); }
+.field.has-error input,
+.field.has-error textarea { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,.08); }
+.error { color: #dc2626; }
+.help { color: var(--muted); }
+.help.warn { color: #d97706; }
+
+/* Status banners */
+.banner {
+  border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;
+  border: 1px solid var(--border); background: var(--card);
+}
+.banner.ok   { border-color: #16a34a; box-shadow: 0 0 0 2px rgba(22,163,74,.08) inset; }
+.banner.error{ border-color: #dc2626; box-shadow: 0 0 0 2px rgba(220,38,38,.08) inset; }
+/* Pro contact card */
+.contact-pro{
+  max-width: 720px; margin: 10px auto 0;
+  padding: 18px; border:1px solid var(--border);
+  background: var(--card); border-radius:16px;
+  box-shadow: 0 14px 34px rgba(0,0,0,.12);
+  display:grid; gap:14px;
+}
+.row-2{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+@media (max-width: 720px){ .row-2{ grid-template-columns: 1fr; } }
+
+.field{ display:grid; gap:6px; }
+.field label{ font-size:13px; color: var(--muted); }
+.input-wrap{ position:relative; }
+.input-wrap input, .input-wrap textarea{
+  width:100%;
+  padding:10px 12px 10px 40px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background: var(--card); color: var(--text);
+  transition: box-shadow .15s, border-color .15s, background .15s;
+}
+.input-wrap.textarea textarea{ padding-left:40px; }
+.icon{
+  position:absolute; left:10px; top:50%; transform: translateY(-50%);
+  opacity:.7; pointer-events:none;
+}
+.field.has-error input, .field.has-error textarea{
+  border-color:#dc2626; box-shadow:0 0 0 3px rgba(220,38,38,.08);
+}
+.field-foot{ display:flex; justify-content:space-between; align-items:center; }
+.error{ color:#dc2626; }
+.counter{ color: var(--muted); }
+.counter.warn{ color:#d97706; }
+
+.btn.btn-lg{ padding:12px 18px; font-weight:600; }
+
+/* Banners */
+.banner{
+  max-width: 720px; margin: 0 auto 12px; padding:10px 12px;
+  border-radius:12px; border:1px solid var(--border); background: var(--card);
+}
+.banner.ok{ border-color:#16a34a; box-shadow:0 0 0 2px rgba(22,163,74,.08) inset; }
+.banner.error{ border-color:#dc2626; box-shadow:0 0 0 2px rgba(220,38,38,.08) inset; }

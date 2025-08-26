@@ -1,0 +1,26 @@
+/* Disable scroll when modal open */
+body.no-scroll { overflow: hidden; }
+
+/* Modal sits above all content */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* nice blur (optional) */
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+.modal-card {
+  position: relative;
+  z-index: 10000;
+  background: #fff;
+  border-radius: 16px;
+  max-width: 720px;
+  width: 92%;
+  padding: 20px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.25);
+}
