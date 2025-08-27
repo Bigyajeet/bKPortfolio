@@ -7,7 +7,7 @@ import Contact from './pages/Contact';
 import RecruiterModal from './components/RecruiterModal';
 import ProfileLinks from './components/ProfileLinks';
 import ThemeToggle from './components/ThemeToggle';
-import NavBar from "./components/NavBar";
+
 
 import './App.css';
 
@@ -20,7 +20,7 @@ export default function App() {
   return (
     <div>
       <RecruiterModal />
-      <NavBar/>
+     
 
       <nav className="nav">
         <div className="nav-inner">
