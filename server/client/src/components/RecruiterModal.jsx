@@ -58,7 +58,7 @@ const emailMe = () => {
         <li>Data/ML: Python, NumPy, pandas, scikit-learn, data cleaning & eval</li>
         <li>DB/Infra: MongoDB/Atlas, SMTP/Nodemailer, Vercel, Render</li>
         <li>Automation: n8n (workflows, webhooks, schedulers, API integrations)</li>
-        <li>Languages: Java (DSA), Python, JavaScript</li>
+        <li>Languages: Java (DSA), Python, JavaScript,MERN</li>
         
         </ul>
         <div className="row">
