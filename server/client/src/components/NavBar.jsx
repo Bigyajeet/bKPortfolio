@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
-import LogoBK from "../LogoBK";           
+import LogoBK from "./LogoBk";           
 import "./NavBar.css";
 
 export default function NavBar({ onHire, onResume }) {
