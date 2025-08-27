@@ -1,90 +1,104 @@
 import { useEffect, useState } from "react";
-import ThemeToggle from "./ThemeToggle";
+import { NavLink, useLocation } from "react-router-dom";
+
+function useTheme() {
+  const [theme, setTheme] = useState(
+    document.documentElement.getAttribute("data-theme") || "dark"
+  );
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+  return { theme, setTheme };
+}
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const loc = useLocation();
 
-  // lock body scroll when menu open
-  useEffect(() => {
-    document.body.classList.toggle("no-scroll", open);
-    return () => document.body.classList.remove("no-scroll");
-  }, [open]);
-
-  // close on resize/hash change/escape
-  useEffect(() => {
-    const close = () => setOpen(false);
-    const onKey = (e) => e.key === "Escape" && close();
-    window.addEventListener("resize", close);
-    window.addEventListener("hashchange", close);
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("resize", close);
-      window.removeEventListener("hashchange", close);
-      window.removeEventListener("keydown", onKey);
-    };
-  }, []);
-
-  // smooth-scroll for same-page anchors (#projects, etc.)
-  const onAnchor = (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    const id = a.getAttribute("href");
-    const el = document.querySelector(id);
-    if (el) {
-      e.preventDefault();
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      history.replaceState(null, "", id);
-      setOpen(false);
-    }
-  };
+  // close sheet on route change
+  useEffect(() => setOpen(false), [loc]);
 
   return (
-    <header className={`nav ${open ? "open" : ""}`}>
+    <nav className={`nav ${open ? "open" : ""}`} data-nav>
       <div className="nav-inner">
-        <a className="brand" href="#home" onClick={onAnchor}>
-          <span className="logo-dot" />
-          <span>Bigyajeet</span>
+        <a className="brand" href="/">
+          <span className="logo-dot" aria-hidden />
+          Bigyajeet
         </a>
 
-        <nav className="nav-links" onClick={onAnchor}>
-          <a href="#home">Home</a>
-          <a href="#projects">Projects</a>
-          <a href="#journal">Journal</a>
-          <a href="#contact">Contact</a>
-        </nav>
-
-        <div className="nav-actions">
-          <a className="btn btn-plain btn-sm" href="/Bigyajeet_Kumar_PatraResume.pdf" download>Resume</a>
-          <a className="btn btn-sm" href="#contact" onClick={onAnchor}>Hire me</a>
-          <ThemeToggle />
+        {/* Desktop links */}
+        <div className="nav-links" role="navigation" aria-label="Primary">
+          <NavLink to="/" end className={({isActive}) => isActive ? "active" : ""}>Home</NavLink>
+          <NavLink to="/projects" className={({isActive}) => isActive ? "active" : ""}>Projects</NavLink>
+          <NavLink to="/journal"  className={({isActive}) => isActive ? "active" : ""}>Journal</NavLink>
+          <NavLink to="/contact"  className={({isActive}) => isActive ? "active" : ""}>Contact</NavLink>
         </div>
 
+        {/* Desktop actions */}
+        <div className="nav-actions">
+          <label className="switch" aria-label="Theme">
+            <input
+              type="checkbox"
+              checked={theme === "dark"}
+              onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
+            />
+            <span className="slider">
+              <span className="icon">🌙</span>
+              <span className="icon">☀️</span>
+            </span>
+          </label>
+          <a className="btn btn-plain" href="/Bigyajeet_Kumar_PatraResume.pdf" download>
+            Resume
+          </a>
+          <a className="btn" href="/#contact">Hire me</a>
+        </div>
+
+        {/* Hamburger (mobile only via CSS) */}
         <button
           className="nav-toggle"
-          onClick={() => setOpen(o => !o)}
-          aria-label="Toggle menu"
+          aria-label="Open menu"
           aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
         >
           ☰
         </button>
       </div>
 
-      {/* Mobile sheet */}
-      <div className="nav-sheet">
-        <a href="#home" onClick={onAnchor}>Home</a>
-        <a href="#projects" onClick={onAnchor}>Projects</a>
-        <a href="#journal" onClick={onAnchor}>Journal</a>
-        <a href="#contact" onClick={onAnchor}>Contact</a>
+      {/* Backdrop for sheet */}
+      <button
+        className="nav-backdrop"
+        aria-hidden={!open}
+        onClick={() => setOpen(false)}
+      />
+
+      {/* Mobile sheet menu */}
+      <div className="nav-sheet" role="dialog" aria-modal="true" aria-label="Menu">
+        <nav aria-label="Mobile">
+          <NavLink to="/" end>Home</NavLink>
+          <NavLink to="/projects">Projects</NavLink>
+          <NavLink to="/journal">Journal</NavLink>
+          <NavLink to="/contact">Contact</NavLink>
+        </nav>
 
         <div className="sheet-actions">
-          <a className="btn btn-plain" href="/Bigyajeet_Kumar_PatraResume.pdf" download>Resume</a>
-          <a className="btn" href="#contact" onClick={onAnchor}>Hire me</a>
-          <ThemeToggle />
+          <label className="switch" aria-label="Theme">
+            <input
+              type="checkbox"
+              checked={theme === "dark"}
+              onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
+            />
+            <span className="slider">
+              <span className="icon">🌙</span>
+              <span className="icon">☀️</span>
+            </span>
+          </label>
+          <a className="btn btn-plain" href="/Bigyajeet_Kumar_PatraResume.pdf" download>
+            Resume
+          </a>
+          <a className="btn" href="/#contact" onClick={() => setOpen(false)}>Hire me</a>
         </div>
       </div>
-
-      {/* Backdrop to close */}
-      <button className="nav-backdrop" aria-hidden="true" onClick={() => setOpen(false)} />
-    </header>
+    </nav>
   );
 }
