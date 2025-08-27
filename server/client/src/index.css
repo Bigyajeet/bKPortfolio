@@ -383,3 +383,69 @@ body.no-scroll { overflow: hidden; }
 }
 .switch input:checked + .slider::after { transform: translateX(24px); }
 .switch .icon { font-size: 12px; opacity: .9; }
+/* --- Strong sticky + fallback for older mobile browsers --- */
+.nav {
+  position: sticky;
+  position: -webkit-sticky; /* iOS */
+  top: env(safe-area-inset-top, 0);
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--border);
+}
+@supports not (position: sticky) {
+  .nav { position: fixed; top: 0; left: 0; right: 0; }
+  body { padding-top: 56px; } /* adjust if your bar is taller */
+}
+
+/* hamburger behaviour */
+.nav-toggle { display: none; }
+@media (max-width: 860px) {
+  .nav-inner { position: relative; }
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px; width: 42px;
+    border-radius: 8px;
+    border: 1px solid var(--chip-border);
+    background: var(--card);
+    color: var(--text);
+  }
+  .nav-links {
+    display: none;
+    position: absolute;
+    left: 0; right: 0; top: 100%;
+    padding: 10px 16px;
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    gap: 8px;
+  }
+  .nav.open .nav-links { display: flex; }
+}
+
+/* --- Phone layout polish --- */
+.container { padding: 16px; }
+.h1 { font-size: clamp(26px, 6vw, 40px); line-height: 1.15; }
+.subtitle { font-size: clamp(14px, 3.6vw, 18px); }
+
+.hero { gap: 24px; padding-top: 16px; }
+.hero-left { width: 100%; }
+.hero-right { width: 100%; justify-content: center; }
+.avatar { width: min(52vw, 260px); height: min(52vw, 260px); }
+
+.metrics { gap: 12px; }
+.metric { min-width: unset; flex: 1 1 calc(50% - 12px); }
+.metric .num { font-size: 20px; }
+.metric .label { font-size: 11px; }
+
+/* CTA buttons: grid -> looks neat and prevents "blank pill" overflow */
+.ctas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 520px; }
+.ctas .btn { width: 100%; white-space: nowrap; }
+@media (max-width: 420px) { .ctas { grid-template-columns: 1fr; } }
+
+/* anchor buttons always keep text color */
+.btn, .btn * { color: inherit !important; }
+/* (you already have rules for visited states; keeping these enforces them) */
