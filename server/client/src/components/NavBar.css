@@ -1,102 +1,55 @@
-/* NavBar.css */
+.navbar { position: sticky; top: 0; z-index: 2000; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background: var(--nav-bg); border-bottom: 1px solid var(--border); }
+.navbar-inner { max-width: var(--container, 1100px); margin: 0 auto; display: flex; align-items: center; gap: 12px; padding: 10px 16px; min-height: 56px; }
+.navbar-brand .logo-bk { display: block; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
-:root {
-  --nav-h: 56px;
-  --safe-top: env(safe-area-inset-top, 0px);
-}
-
-/* header */
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 3000;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  background: var(--nav-bg);
-  border-bottom: 1px solid var(--border);
-}
-.navbar-inner { 
-  max-width: var(--container, 1100px);
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 10px 16px;
-  min-height: var(--nav-h);
-}
-
-/* desktop links/actions */
-.navbar-links { display:flex; gap:6px; margin-left:12px; }
-.navbar-links a { padding:8px 10px; border-radius:10px; color:var(--text); }
+.navbar-links { display: flex; gap: 6px; }
+.navbar-links a { padding: 8px 10px; border-radius: 10px; color: var(--text); }
 .navbar-links a:hover { background: rgba(99,102,241,.08); }
 .navbar-links a.active { background: rgba(99,102,241,.12); color:#60a5fa; font-weight:600; box-shadow: inset 0 0 0 1px #2e3a67; }
-.navbar-actionsDesktop { margin-left:auto; display:flex; gap:10px; align-items:center; }
 
-/* brand + toggle */
-.navbar-brand { display:inline-flex; align-items:center; gap:8px; font-weight:800; color:var(--text); }
-.navbar-logoDot { width:12px; height:12px; border-radius:999px; background:linear-gradient(90deg,#2563eb,#22c55e,#f59e0b); box-shadow:0 0 0 3px rgba(37,99,235,.15); }
-.navbar-toggle { display:none; margin-left:auto; height:36px; width:42px; border-radius:8px; border:1px solid var(--chip-border); background:var(--card); color:var(--text); }
+.navbar-spacer { flex: 1; }
 
-/* sheet/backdrop default (hidden) */
-.navbar-sheet { display:none; }
-.navbar-backdrop { display:none; }
+.navbar-theme { display: inline-flex; align-items: center; }
+.navbar-actionsDesktop { display: flex; gap: 10px; align-items: center; }
 
-/* OPEN state — fill the viewport below the header */
-.navbar[data-open="true"] .navbar-backdrop {
-  display:block;
-  position:fixed;
-  inset:0;
-  z-index:3001;
-  background:rgba(0,0,0,.35);
-  -webkit-backdrop-filter: blur(2px);
-  backdrop-filter: blur(2px);
+.navbar-toggle { display: none; height:36px; width:42px; border-radius:8px; border:1px solid var(--chip-border); background:var(--card); color:var(--text); }
+
+.navbar-backdrop { display: none; }
+.navbar-sheet { display: none; }
+
+/* Desktop */
+@media (min-width: 861px) {
+  .navbar-links { display: flex; }
+  .navbar-actionsDesktop { display: flex; }
+  .navbar-toggle { display: none; }
+  .navbar-sheet, .navbar-backdrop { display: none !important; }
 }
 
-.navbar[data-open="true"] .navbar-sheet {
-  display:block;
-  position:fixed;
-  left:0;
-  right:0;
+/* Mobile */
+@media (max-width: 860px) {
+  .navbar-links, .navbar-actionsDesktop { display: none; }
+  .navbar-toggle { display: inline-flex; align-items: center; justify-content: center; margin-left: 6px; }
 
-  /* start just below the header, then fill the rest */
-  top: calc(var(--safe-top) + var(--nav-h));
-  height: calc(100dvh - var(--nav-h) - var(--safe-top));
+  .navbar-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,.35);
+    -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); border: none;
+    z-index: 1400; display: none;
+  }
+  .navbar-sheet {
+    position: fixed; top: 56px; left: 0; right: 0; bottom: 0;
+    background: var(--bg); border-top: 1px solid var(--border); padding: 14px 16px; overflow: auto;
+    z-index: 1500; display: none;
+  }
+  .navbar[data-open="true"] .navbar-backdrop { display: block; }
+  .navbar[data-open="true"] .navbar-sheet { display: block; }
 
-  /* if 100dvh is not supported, browsers will use this anyway */
-  bottom:0;
+  .navbar-sheet a { display: block; padding: 12px 10px; border-radius: 10px; color: var(--text); }
+  .navbar-sheet a:hover { background: rgba(99,102,241,.08); }
 
-  z-index:3002;
-  background:var(--bg);
-  border-top:1px solid var(--border);
-  padding:14px 16px;
-  overflow:auto;
+  .navbar-sheetActions { margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 420px) { .navbar-sheetActions { grid-template-columns: 1fr; } }
 }
 
-.navbar-sheet a { display:block; padding:12px 10px; border-radius:10px; color:var(--text); }
-.navbar-sheet a:hover { background: rgba(99,102,241,.08); }
-.navbar-sheetActions { margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-@media (max-width:420px){ .navbar-sheetActions { grid-template-columns:1fr; } }
-
-/* responsive – on mobile, show toggle and move links into sheet */
-@media (max-width:860px){
-  .navbar-links, .navbar-actionsDesktop { display:none; }
-  .navbar-toggle { display:inline-flex; align-items:center; justify-content:center; }
-}
-@media (min-width:861px){
-  .navbar-toggle { display:none; }
-  .navbar-links, .navbar-actionsDesktop { display:flex; }
-  .navbar-sheet, .navbar-backdrop { display:none !important; }
-}
-
-/* lock background scroll when open */
-body.no-scroll { overflow:hidden; }
-/* keep svg crisp and aligned */
-.navbar-brand .logo-bk { display:block; }
-.navbar-brand { color: var(--text); }
-
-/* screen-reader only (utility) */
-.sr-only {
-  position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
-  clip:rect(0,0,0,0); white-space:nowrap; border:0;
-}
-
+/* Prevent body scroll when menu is open */
+body.no-scroll { overflow: hidden; }
