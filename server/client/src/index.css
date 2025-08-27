@@ -11,6 +11,7 @@
   --btn-bg: #2563eb;
   --btn-bg-hover: #1d4ed8;
   --btn-text: #ffffff;
+  color-scheme: light;
 
   --chip-bg: #ffffff;
   --chip-border: #e5e7eb;
@@ -24,6 +25,7 @@ html[data-theme="dark"] {
   --border: #1f2a44;
   --nav-bg: rgba(10,15,30,.7);
   --footer-border: #1f2937;
+  color-scheme: dark;
 
   --btn-bg: #3b82f6;
   --btn-bg-hover: #2563eb;
