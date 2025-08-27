@@ -181,3 +181,7 @@ body.no-scroll { overflow: hidden; }
 }
 .switch input:checked + .slider::after { transform: translateX(24px); }
 .switch .icon { font-size:12px; opacity:.9; }
+/* Always hidden by default to avoid showing on desktop */
+.nav-sheet {
+  display: none !important;
+}

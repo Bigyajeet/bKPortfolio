@@ -33,6 +33,14 @@ export default function App() {
     else document.body.classList.remove("no-scroll");
     return () => document.body.classList.remove("no-scroll");
   }, [menuOpen]);
+  useEffect(() => {
+  const onResize = () => {
+    if (window.innerWidth > 860) setNavOpen(false);
+  };
+  window.addEventListener('resize', onResize);
+  return () => window.removeEventListener('resize', onResize);
+}, []);
+
 
   // Close on Escape
   useEffect(() => {
