@@ -1,8 +1,9 @@
 /* src/components/NavBar.css */
+
 .navbar {
   position: sticky;
   top: env(safe-area-inset-top, 0);
-  z-index: 1000;
+  z-index: 9998;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   background: var(--nav-bg);
@@ -16,55 +17,128 @@
   align-items: center;
   gap: 16px;
   padding: 10px 16px;
-  min-height: 56px;
+  min-height: var(--nav-h, 56px);
 }
 
-/* brand */
-.navbar-brand { display:inline-flex; align-items:center; gap:8px; font-weight:800; color:var(--text); }
+.navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  color: var(--text);
+}
+
 .navbar-logoDot {
-  width:12px; height:12px; border-radius:999px;
-  background: linear-gradient(90deg,#2563eb,#22c55e,#f59e0b);
-  box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2563eb, #22c55e, #f59e0b);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .15);
 }
 
-/* desktop links/actions */
-.navbar-links { display:flex; gap:6px; margin-left:12px; }
-.navbar-links a { padding:8px 10px; border-radius:10px; color:var(--text); }
-.navbar-links a:hover { background: rgba(99,102,241,.08); }
-.navbar-links a.active { background: rgba(99,102,241,.12); color:#60a5fa; font-weight:600; box-shadow: inset 0 0 0 1px #2e3a67; }
+.navbar-links {
+  display: flex;
+  gap: 6px;
+  margin-left: 12px;
+}
 
-.navbar-actionsDesktop { margin-left:auto; display:flex; gap:10px; align-items:center; }
+.navbar-links a {
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: var(--text);
+}
 
-/* hamburger (hidden by default; only mobile shows it) */
-.navbar-toggle { display:none; margin-left:auto; height:36px; width:42px; border-radius:8px; border:1px solid var(--chip-border); background:var(--card); color:var(--text); }
+.navbar-links a:hover { background: rgba(99, 102, 241, .08); }
 
-/* sheet + backdrop default state */
-.navbar-sheet { display:none !important; }
-.navbar-backdrop { display:none !important; position:fixed; inset:0; background:rgba(0,0,0,.35); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); border:none; }
+.navbar-links a.active {
+  background: rgba(99, 102, 241, .12);
+  color: #60a5fa;
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px #2e3a67;
+}
 
-/* Always show sheet when open (for easy verification) */
-.navbar[data-open="true"] .navbar-sheet { display:block !important; position:fixed; top:56px; left:0; right:0; bottom:0; background:var(--bg); border-top:1px solid var(--border); padding:14px 16px; overflow:auto; }
-.navbar[data-open="true"] .navbar-backdrop { display:block !important; }
+.navbar-actionsDesktop {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
-/* Sheet content */
-.navbar-sheet a { display:block; padding:12px 10px; border-radius:10px; color:var(--text); }
-.navbar-sheet a:hover { background: rgba(99,102,241,.08); }
-.navbar-sheetActions { margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-@media (max-width: 420px) { .navbar-sheetActions { grid-template-columns:1fr; } }
+.navbar-toggle {
+  display: none;
+  margin-left: auto;
+  height: 36px;
+  width: 42px;
+  border-radius: 8px;
+  border: 1px solid var(--chip-border);
+  background: var(--card);
+  color: var(--text);
+}
 
-/* Desktop rules — force desktop layout */
+.navbar-backdrop,
+.navbar-sheet {
+  display: none;
+}
+
+.navbar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .35);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  border: none;
+  z-index: 9990;
+}
+
+.navbar-sheet {
+  position: fixed;
+  top: var(--nav-h, 56px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 14px 16px;
+  overflow: auto;
+  z-index: 9999;
+}
+
+.navbar[data-open="true"] .navbar-sheet { display: block; }
+.navbar[data-open="true"] .navbar-backdrop { display: block; }
+
+.navbar-sheet a {
+  display: block;
+  padding: 12px 10px;
+  border-radius: 10px;
+  color: var(--text);
+}
+
+.navbar-sheet a:hover { background: rgba(99, 102, 241, .08); }
+
+.navbar-sheetActions {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 420px) {
+  .navbar-sheetActions { grid-template-columns: 1fr; }
+}
+
 @media (min-width: 861px) {
-  .navbar-toggle { display:none; }
-  .navbar-links, .navbar-actionsDesktop { display:flex; }
-  /* On desktop, even if someone toggles data-open programmatically, keep sheet hidden */
-  .navbar-sheet, .navbar-backdrop { display:none !important; }
+  .navbar-toggle { display: none; }
+  .navbar-links, .navbar-actionsDesktop { display: flex; }
+  .navbar-sheet, .navbar-backdrop { display: none !important; }
 }
 
-/* Mobile rules — enable hamburger and links inside sheet */
 @media (max-width: 860px) {
-  .navbar-links, .navbar-actionsDesktop { display:none; }
-  .navbar-toggle { display:inline-flex; align-items:center; justify-content:center; }
+  .navbar-links, .navbar-actionsDesktop { display: none; }
+  .navbar-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
-/* Lock scroll when menu is open */
-body.no-scroll { overflow:hidden; }
+body.no-scroll { overflow: hidden; }
