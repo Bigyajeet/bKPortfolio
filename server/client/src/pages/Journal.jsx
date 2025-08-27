@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { api } from "../api";
+import { api } from "D:\portfo\my-portfolio\server\client\src\api.js";
 import './Journal.css'
 
 function formatDate(iso) {
