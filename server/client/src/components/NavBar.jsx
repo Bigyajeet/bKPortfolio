@@ -1,98 +1,78 @@
 import { useEffect, useState } from "react";
-import "./NavBar.css";
+import { NavLink, useLocation } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 
-export default function NavBar() {
+export default function NavBar({ onHire, onResume }) {
   const [open, setOpen] = useState(false);
+  const loc = useLocation();
 
-  // Lock body scroll when menu is open (mobile)
-  useEffect(() => {
-    if (open) document.body.classList.add("no-scroll");
-    else document.body.classList.remove("no-scroll");
-    return () => document.body.classList.remove("no-scroll");
-  }, [open]);
+  // Close sheet on route change
+  useEffect(() => { setOpen(false); }, [loc.pathname]);
 
-  // Close on ESC
+  // Close sheet if viewport grows beyond breakpoint
   useEffect(() => {
-    const onKey = (e) => e.key === "Escape" && setOpen(false);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    const onResize = () => { if (window.innerWidth > 860) setOpen(false); };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // Change this if you're using a router; call setOpen(false) on route change.
-
   return (
-    <nav className={`nb-nav ${open ? "is-open" : ""}`}>
-      <div className="nb-inner">
-        <a className="nb-brand" href="/">
-          <span className="nb-dot" aria-hidden="true" />
-          Bigyajeet
+    <nav className="navbar" data-open={open ? "true" : "false"}>
+      <div className="navbar-inner">
+        <a className="navbar-brand" href="/">
+          <span className="navbar-logoDot" />
+          <span>Bigyajeet</span>
         </a>
 
         {/* Desktop links */}
-        <div className="nb-links" role="navigation" aria-label="Primary">
-          <a href="/" className="active">Home</a>
-          <a href="/projects">Projects</a>
-          <a href="/journal">Journal</a>
-          <a href="/contact">Contact</a>
+        <div className="navbar-links">
+          <NavLink to="/" end>Home</NavLink>
+          <NavLink to="/projects">Projects</NavLink>
+          <NavLink to="/journal">Journal</NavLink>
+          <NavLink to="/contact">Contact</NavLink>
         </div>
 
         {/* Desktop actions */}
-        <div className="nb-actions">
-          <label className="switch" title="Toggle theme">
-            <input
-              type="checkbox"
-              onChange={(e) =>
-                document.documentElement.setAttribute(
-                  "data-theme",
-                  e.target.checked ? "dark" : "light"
-                )
-              }
-            />
-            <span className="slider">
-              <span className="icon">☀️</span>
-              <span className="icon">🌙</span>
-            </span>
-          </label>
-
-          <a className="btn btn-plain" href="/Bigyajeet_Kumar_PatraResume.pdf" download>
-            Resume
-          </a>
-          <a className="btn" href="mailto:bigyajeetkumarpatra@gmail.com">Hire me</a>
+        <div className="navbar-actionsDesktop">
+          <ThemeToggle />
+          <button className="chip" onClick={onResume}>Resume</button>
+          <button className="btn btn-sm" onClick={onHire}>Hire me</button>
         </div>
 
-        {/* Hamburger (mobile) */}
+        {/* Hamburger (mobile only) */}
         <button
-          className="nb-toggle"
-          aria-expanded={open}
-          aria-controls="nb-sheet"
-          aria-label="Toggle menu"
-          onClick={() => setOpen((o) => !o)}
+          aria-label="Open menu"
+          className="navbar-toggle"
+          onClick={() => setOpen(v => !v)}
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            {open ? (
-              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" />
-            ) : (
-              <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2" />
-            )}
-          </svg>
+          <span aria-hidden>≡</span>
         </button>
       </div>
 
-      {/* Backdrop & Sheet for mobile */}
-      <button className="nb-backdrop" aria-hidden={!open} onClick={() => setOpen(false)} />
-      <div id="nb-sheet" className="nb-sheet">
-        <a href="/" onClick={() => setOpen(false)}>Home</a>
-        <a href="/projects" onClick={() => setOpen(false)}>Projects</a>
-        <a href="/journal" onClick={() => setOpen(false)}>Journal</a>
-        <a href="/contact" onClick={() => setOpen(false)}>Contact</a>
+      {/* Mobile sheet */}
+      <div className="navbar-sheet">
+        <NavLink to="/" end>Home</NavLink>
+        <NavLink to="/projects">Projects</NavLink>
+        <NavLink to="/journal">Journal</NavLink>
+        <NavLink to="/contact">Contact</NavLink>
 
-        <div className="nb-sheet-actions">
-          <a className="btn btn-plain" href="/Bigyajeet_Kumar_PatraResume.pdf" download>
+        <div className="navbar-sheetActions">
+          <ThemeToggle />
+          <button className="chip" onClick={() => { setOpen(false); onResume?.(); }}>
             Resume
-          </a>
-          <a className="btn" href="mailto:bigyajeetkumarpatra@gmail.com">Hire me</a>
+          </button>
+          <button className="btn" onClick={() => { setOpen(false); onHire?.(); }}>
+            Hire me
+          </button>
         </div>
       </div>
+
+      {/* Backdrop */}
+      <button
+        className="navbar-backdrop"
+        aria-hidden="true"
+        onClick={() => setOpen(false)}
+      />
     </nav>
   );
 }
