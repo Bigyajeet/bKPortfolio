@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import ProfileLinks from "./ProfileLinks";
+import './RecruiterModal'
 export default function RecruiterModal() {
   const [show, setShow] = useState(false);
   // add this helper near the top of the component

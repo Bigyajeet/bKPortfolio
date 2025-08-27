@@ -1,21 +1,22 @@
-import './Project.css'
-
+// src/pages/Projects.jsx
 import { useEffect, useMemo, useState } from "react";
+import "./Project.css";
 
-const GH_USER = "Bigyajeet" 
+const GH_USER = "Bigyajeet"; // change if needed
 
-e
+// deterministic “variant” picker so each shuffle can change the card look
 function pickVariant(id, seed, n) {
   let x = (id + 101 * seed) % 2147483647;
   x = (x * 48271) % 2147483647;
   return x % n; // 0..n-1
 }
-const shuffle = (a) => [...a].sort(() => Math.random() - 0.5);
+
+const shuffleArray = (arr) => [...arr].sort(() => Math.random() - 0.5);
 
 export default function Projects() {
   const [repos, setRepos] = useState([]);
   const [order, setOrder] = useState([]);
-  const [seed, setSeed] = useState(0);  
+  const [seed, setSeed] = useState(0);
   const [err, setErr] = useState("");
 
   useEffect(() => {
@@ -27,44 +28,59 @@ export default function Projects() {
         );
         if (!r.ok) throw new Error(`GitHub ${r.status}`);
         const data = await r.json();
-        const mapped = data.filter(d => !d.fork).map(d => ({
-          id: d.id,
-          name: d.name,
-          desc: d.description || "",
-          lang: d.language || "Mixed",
-          stars: d.stargazers_count,
-          url: d.html_url,
-          demo: d.homepage || "",
-          topics: d.topics || [],
-          updated: d.pushed_at
-        }));
+
+        const mapped = (Array.isArray(data) ? data : [])
+          .filter((d) => !d.fork)
+          .map((d) => ({
+            id: d.id,
+            name: d.name,
+            desc: d.description || "",
+            lang: d.language || "Mixed",
+            stars: d.stargazers_count,
+            url: d.html_url,
+            demo: d.homepage || "",
+            topics: d.topics || [],
+            updated: d.pushed_at,
+          }));
+
         setRepos(mapped);
-        setOrder(mapped.map(x => x.id));
-      } catch (e) { setErr(String(e.message || e)); }
+        setOrder(mapped.map((x) => x.id));
+      } catch (e) {
+        setErr(String(e?.message || e));
+      }
     })();
   }, []);
 
+  // quick id→repo map so we can keep a separate “order” array
+  const byId = useMemo(() => {
+    const m = new Map();
+    for (const r of repos) m.set(r.id, r);
+    return m;
+  }, [repos]);
+
   const list = useMemo(
-    () => order.map(id => repos.find(r => r.id === id)).filter(Boolean),
-    [order, repos]
+    () => order.map((id) => byId.get(id)).filter(Boolean),
+    [order, byId]
   );
 
-  const onShuffle = () => { setOrder(shuffle(order)); setSeed(s => s + 1); };
+  const onShuffle = () => {
+    setOrder((prev) => shuffleArray(prev));
+    setSeed((s) => s + 1); // forces new keys so cards remount with new variants
+  };
 
   return (
     <div className="container">
-      <h2>Projects</h2>
-
-      <div className="row" style={{ marginBottom: 12 }}>
+      <div className="row head" style={{ alignItems: "center", gap: 12 }}>
+        <h2 style={{ margin: 0 }}>Projects</h2>
         <button className="btn" onClick={onShuffle}>Shuffle</button>
-        {err && <small style={{ color: "tomato" }}>GitHub: {err}</small>}
+        {!!err && <small className="error" style={{ color: "tomato" }}>GitHub: {err}</small>}
       </div>
 
-      <div className="cards-grid">
+      <div className="cards-grid" style={{ marginTop: 12 }}>
         {list.map((r, i) => {
-          const v = pickVariant(r.id, seed, 4); // 4 templates
+          const v = pickVariant(r.id, seed, 4); // 4 visual templates
           const rot = ((i % 5) - 2) * 1.2;      // tiny playful angle
-          const key = `${r.id}-${seed}`;        // forces a “new div” each shuffle
+          const key = `${r.id}-${seed}`;        // new div each shuffle
 
           if (v === 0) return <CardGradient key={key} r={r} i={i} rot={rot} />;
           if (v === 1) return <CardStripe   key={key} r={r} i={i} rot={rot} />;
@@ -72,15 +88,17 @@ export default function Projects() {
           return          <CardMinimal  key={key} r={r} i={i} rot={rot} />;
         })}
       </div>
+
+      {!list.length && !err && <p className="muted">No repositories yet.</p>}
     </div>
   );
 }
 
-
+/* ---------- Card Variants ---------- */
 
 function CardGradient({ r, i, rot }) {
   return (
-    <div className="vcard vA appear" style={{ "--delay": `${i*60}ms`, "--rot": `${rot}deg` }}>
+    <div className="vcard vA appear" style={{ "--delay": `${i * 60}ms`, "--rot": `${rot}deg` }}>
       <div className="band" />
       <div className="content">
         <div className="row" style={{ justifyContent: "space-between" }}>
@@ -102,7 +120,7 @@ function CardGradient({ r, i, rot }) {
 
 function CardStripe({ r, i, rot }) {
   return (
-    <div className="vcard vB appear" style={{ "--delay": `${i*60}ms`, "--rot": `${rot}deg` }}>
+    <div className="vcard vB appear" style={{ "--delay": `${i * 60}ms`, "--rot": `${rot}deg` }}>
       <div className="stripe" />
       <b>{r.name}</b>
       <p>{r.desc || "No description yet."}</p>
@@ -119,12 +137,12 @@ function CardStripe({ r, i, rot }) {
 
 function CardRibbon({ r, i, rot }) {
   return (
-    <div className="vcard vC appear" style={{ "--delay": `${i*60}ms`, "--rot": `${rot}deg` }}>
+    <div className="vcard vC appear" style={{ "--delay": `${i * 60}ms`, "--rot": `${rot}deg` }}>
       <span className="ribbon">★ {r.stars}</span>
       <b>{r.name}</b>
       <p style={{ minHeight: 44 }}>{r.desc || "No description yet."}</p>
       <div className="tags">
-        {(r.topics?.slice(0, 3) || []).map(t => <span key={t} className="chip">{t}</span>)}
+        {(r.topics?.slice(0, 3) || []).map((t) => <span key={t} className="chip">{t}</span>)}
         {!r.topics?.length && <span className="chip">{r.lang}</span>}
       </div>
       <div className="row" style={{ marginTop: 10 }}>
@@ -137,7 +155,7 @@ function CardRibbon({ r, i, rot }) {
 
 function CardMinimal({ r, i, rot }) {
   return (
-    <div className="vcard vD appear" style={{ "--delay": `${i*60}ms`, "--rot": `${rot}deg` }}>
+    <div className="vcard vD appear" style={{ "--delay": `${i * 60}ms`, "--rot": `${rot}deg` }}>
       <div className="row" style={{ justifyContent: "space-between", alignItems: "baseline" }}>
         <b className="title">{r.name}</b>
         <small>{new Date(r.updated).toLocaleDateString()}</small>

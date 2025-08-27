@@ -6,7 +6,7 @@ import Journal from './pages/Journal';
 import Contact from './pages/Contact';
 import RecruiterModal from './components/RecruiterModal';
 import ProfileLinks from './components/ProfileLinks';
-import ThemeToggle from './components/Themetoggle';
+import ThemeToggle from './components/ThemeToggle';
 
 import './App.css';
 

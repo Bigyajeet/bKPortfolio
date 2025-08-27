@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "../api";
+import { api } from "D:\portfo\my-portfolio\server\client\src\api.js";
 import './Home.css'
 
 
@@ -11,15 +11,15 @@ export default function Home() {
   }, []);
 
   const openRecruiter = () => {
-    window.dispatchEvent(new CustomEvent("recruiter:open"));
-    api("/api/track", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "recruiter_mode_opened" })
-    });
-    history.replaceState(null, "", "#recruiter");
-  };
-  
+  window.dispatchEvent(new CustomEvent("recruiter:open"));
+  api("/api/track", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "recruiter_mode_opened" })
+  }).catch(()=>{});
+  window.history.replaceState(null, "", "#recruiter");
+};
+
 const emailMe = () => {
   const to = "bigyajeetkumarpatra@gmail.com";
   const subject = "Interview inquiry";
@@ -59,7 +59,7 @@ const emailMe = () => {
 
         <div className="row ctas">
           <button className="btn" onClick={openRecruiter}>Recruiter Mode</button>
-          <a className="btn btn-plain" href="/Bigyajeet_Kumar_PatraResume.pdf" download>Download Resume</a>
+          <a className="btn btn-plain" href="public/Bigyajeet_Kumar_PatraResume.pdf" download>Download Resume</a>
 <button className="btn btn-plain" onClick={emailMe}>Email me</button>
   <a className="btn btn-ghost" href="/projects">View Projects</a>
         </div>
@@ -70,7 +70,7 @@ const emailMe = () => {
       
       <aside className="hero-right">
         <div className="avatar-ring">
-          <img src="bk.png" alt="Bigyajeet Kumar Patra" className="avatar" />
+          <img src="public/bk.png" alt="Bigyajeet Kumar Patra" className="avatar" />
         </div>
       </aside>
     </div>
