@@ -1,3 +1,4 @@
+// src/components/NavBar.jsx
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
@@ -6,15 +7,12 @@ export default function NavBar({ onHire, onResume }) {
   const [open, setOpen] = useState(false);
   const loc = useLocation();
 
-  // Close sheet on route change
   useEffect(() => { setOpen(false); }, [loc.pathname]);
 
-  // Close sheet if viewport grows beyond breakpoint
   useEffect(() => {
-    const onResize = () => { if (window.innerWidth > 860) setOpen(false); };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
+    document.body.classList.toggle("no-scroll", open);
+    return () => document.body.classList.remove("no-scroll");
+  }, [open]);
 
   return (
     <nav className="navbar" data-open={open ? "true" : "false"}>
@@ -24,7 +22,6 @@ export default function NavBar({ onHire, onResume }) {
           <span>Bigyajeet</span>
         </a>
 
-        {/* Desktop links */}
         <div className="navbar-links">
           <NavLink to="/" end>Home</NavLink>
           <NavLink to="/projects">Projects</NavLink>
@@ -32,25 +29,24 @@ export default function NavBar({ onHire, onResume }) {
           <NavLink to="/contact">Contact</NavLink>
         </div>
 
-        {/* Desktop actions */}
         <div className="navbar-actionsDesktop">
           <ThemeToggle />
           <button className="chip" onClick={onResume}>Resume</button>
           <button className="btn btn-sm" onClick={onHire}>Hire me</button>
         </div>
 
-        {/* Hamburger (mobile only) */}
         <button
-          aria-label="Open menu"
           className="navbar-toggle"
+          aria-label="Open menu"
+          aria-controls="navSheet"
+          aria-expanded={open}
           onClick={() => setOpen(v => !v)}
         >
           <span aria-hidden>≡</span>
         </button>
       </div>
 
-      {/* Mobile sheet */}
-      <div className="navbar-sheet">
+      <div id="navSheet" className="navbar-sheet" role="dialog" aria-modal="true">
         <NavLink to="/" end>Home</NavLink>
         <NavLink to="/projects">Projects</NavLink>
         <NavLink to="/journal">Journal</NavLink>
@@ -58,19 +54,14 @@ export default function NavBar({ onHire, onResume }) {
 
         <div className="navbar-sheetActions">
           <ThemeToggle />
-          <button className="chip" onClick={() => { setOpen(false); onResume?.(); }}>
-            Resume
-          </button>
-          <button className="btn" onClick={() => { setOpen(false); onHire?.(); }}>
-            Hire me
-          </button>
+          <button className="chip" onClick={() => { setOpen(false); onResume?.(); }}>Resume</button>
+          <button className="btn" onClick={() => { setOpen(false); onHire?.(); }}>Hire me</button>
         </div>
       </div>
 
-      {/* Backdrop */}
       <button
         className="navbar-backdrop"
-        aria-hidden="true"
+        tabIndex={-1}
         onClick={() => setOpen(false)}
       />
     </nav>
