@@ -42,7 +42,7 @@ export default function App() {
           </div>
 
           <div className="nav-actions">
-            <a className="chip" href="/resume.pdf" download>Resume</a>
+            <a className="chip" href="/Bigyajeet_Kumar_PatraResume.pdf" download>Resume</a>
             <button className="btn btn-sm" onClick={openRecruiter}>Hire me</button>
           </div>
         </div>
