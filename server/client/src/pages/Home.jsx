@@ -59,7 +59,7 @@ const emailMe = () => {
 
         <div className="row ctas">
           <button className="btn" onClick={openRecruiter}>Recruiter Mode</button>
-          <a className="btn btn-plain" href="public/Bigyajeet_Kumar_PatraResume.pdf" download>Download Resume</a>
+          <a className="btn btn-plain" href="/Bigyajeet_Kumar_PatraResume.pdf" download>Download Resume</a>
 <button className="btn btn-plain" onClick={emailMe}>Email me</button>
   <a className="btn btn-ghost" href="/projects">View Projects</a>
         </div>
@@ -70,7 +70,7 @@ const emailMe = () => {
       
       <aside className="hero-right">
         <div className="avatar-ring">
-          <img src="public/bk.png" alt="Bigyajeet Kumar Patra" className="avatar" />
+          <img src="/bk.png" alt="Bigyajeet Kumar Patra" className="avatar" />
         </div>
       </aside>
     </div>
