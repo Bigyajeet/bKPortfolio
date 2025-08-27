@@ -85,48 +85,63 @@ html { scroll-behavior: smooth; }
 .nav-toggle { display:none; }
 
 /* Mobile menu (sheet) */
-@media (max-width: 860px) {
-  .nav-inner { position: relative; }
-  .nav-toggle {
-    display:inline-flex; align-items:center; justify-content:center;
-    height:36px; width:42px; margin-left:auto;
-    border:1px solid var(--chip-border); border-radius:8px;
-    background: var(--card); color: var(--text);
+/* Mobile navbar behaviour (force) */
+@media (max-width: 1024px) {
+  /* hide desktop links/actions */
+  .nav-links,
+  .nav-actions {
+    display: none !important;
   }
-  .nav-links, .nav-actions { display: none; }
 
+  /* show hamburger */
+  .nav-toggle {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    width: 42px;
+    margin-left: auto;
+    border: 1px solid var(--chip-border);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+  }
+
+  /* mobile sheet */
   .nav-sheet {
     display: none;
-    position: fixed; top: 56px; left: 0; right: 0; bottom: 0;
-    z-index: 999;
+    position: fixed;
+    top: 56px; /* same as .nav-inner min-height */
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: var(--bg);
     border-top: 1px solid var(--border);
     padding: 14px 16px;
     overflow: auto;
   }
-  .nav.open .nav-sheet { display: block; }
-
-  .nav-sheet a {
-    display:block; padding:12px 10px; border-radius:10px; color:var(--text);
+  .nav.open .nav-sheet {
+    display: block;
   }
-  .nav-sheet a:hover { background: rgba(99,102,241,.08); }
 
-  .sheet-actions {
-    margin-top: 12px;
-    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-  }
-  @media (max-width: 420px) { .sheet-actions { grid-template-columns: 1fr; } }
-
+  /* darkened backdrop */
   .nav-backdrop {
     display: none;
   }
   .nav.open .nav-backdrop {
     display: block;
-    position: fixed; inset: 0; z-index: 998;
-    border: none; background: rgba(0,0,0,.35);
-    -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    border: 0;
   }
 }
+
+/* keep a predictable nav height for sticky */
+.nav-inner { min-height: 56px; }
+
 
 /* Buttons */
 .btn {
