@@ -1,4 +1,4 @@
-import { api } from 'D:\portfo\my-portfolio\server\client\src\api.js'
+import { api } from '../Api';
 
 const profiles = [
   { name: "GitHub", url: "https://github.com/Bigyajeet" },

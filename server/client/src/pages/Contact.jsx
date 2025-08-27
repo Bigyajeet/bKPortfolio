@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { api } from "D:\portfo\my-portfolio\server\client\src\api.js";
+import { api } from "../Api";
 import ProfileLinks from "../components/ProfileLinks";
 
 const MAX_MSG = 1000;

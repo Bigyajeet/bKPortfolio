@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "D:\portfo\my-portfolio\server\client\src\api.js";
+import { api } from "../Api";
 import './Home.css'
 
 
