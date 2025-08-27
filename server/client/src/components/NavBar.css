@@ -1,44 +1,160 @@
+/* Base tokens assumed from your index.css:
+   --bg, --text, --card, --border, --nav-bg, --chip-border, --btn-*, etc. */
 
-.nav {
+.nb-nav {
   position: sticky;
-  position: -webkit-sticky; 
-  top: env(safe-area-inset-top, 0);
+  top: 0;
   z-index: 1000;
+  background: var(--nav-bg);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  background: var(--nav-bg);
   border-bottom: 1px solid var(--border);
 }
 
-
-@supports not (position: sticky) {
-  .nav { position: fixed; top: 0; left: 0; right: 0; }
-  body { padding-top: 56px; } 
+.nb-inner {
+  min-height: 56px;
+  max-width: var(--container, 1100px);
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
+.nb-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  color: var(--text);
+}
 
-.nav-toggle { display: none; }
-@media (max-width: 860px) {
-  .nav-inner { position: relative; }
-  .nav-toggle {
+.nb-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2563eb, #22c55e, #f59e0b);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+}
+
+/* Desktop links & actions */
+.nb-links {
+  display: flex;
+  gap: 6px;
+  margin-left: 12px;
+}
+
+.nb-links a {
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: var(--text);
+}
+
+.nb-links a:hover { background: rgba(99,102,241,.08); }
+.nb-links a.active {
+  background: rgba(99,102,241,.12);
+  color: #60a5fa;
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px #2e3a67;
+}
+
+.nb-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Hamburger hidden on desktop */
+.nb-toggle { display: none; }
+
+/* Mobile rules */
+@media (max-width: 900px) {
+  .nb-links,
+  .nb-actions { display: none; }
+
+  .nb-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 36px; width: 42px;
-    border-radius: 8px;
+    height: 36px;
+    width: 42px;
+    margin-left: auto;
     border: 1px solid var(--chip-border);
+    border-radius: 8px;
     background: var(--card);
     color: var(--text);
   }
-  .nav-links {
+
+  .nb-sheet {
     display: none;
-    position: absolute;
-    left: 0; right: 0; top: 100%;
-    padding: 10px 16px;
-    background: var(--nav-bg);
-    border-bottom: 1px solid var(--border);
-    flex-direction: column;
-    gap: 8px;
+    position: fixed;
+    top: 56px; /* match .nb-inner min-height */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 14px 16px;
+    overflow: auto;
   }
-  .nav.open .nav-links { display: flex; }
+  .nb-nav.is-open .nb-sheet { display: block; }
+
+  .nb-sheet a {
+    display: block;
+    padding: 12px 10px;
+    border-radius: 10px;
+    color: var(--text);
+  }
+  .nb-sheet a:hover { background: rgba(99,102,241,.08); }
+
+  .nb-sheet-actions {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 420px) {
+    .nb-sheet-actions { grid-template-columns: 1fr; }
+  }
+
+  .nb-backdrop {
+    display: none;
+  }
+  .nb-nav.is-open .nb-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+    border: 0;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+  }
 }
+
+/* Theme switch (reuse your existing switch styles) */
+.switch {
+  position: relative;
+  width: 54px;
+  height: 30px;
+  display: inline-block;
+}
+.switch input { display: none; }
+.switch .slider {
+  position: absolute; inset: 0;
+  background: var(--border);
+  border-radius: 999px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 6px;
+  color: #6b7280;
+}
+.switch .slider::after {
+  content: "";
+  position: absolute; left: 3px; top: 3px;
+  width: 24px; height: 24px; border-radius: 999px;
+  background: var(--card);
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  transition: transform .18s ease;
+}
+.switch input:checked + .slider::after { transform: translateX(24px); }
+.switch .icon { font-size: 12px; opacity: .9; }

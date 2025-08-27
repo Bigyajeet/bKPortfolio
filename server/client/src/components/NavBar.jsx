@@ -1,102 +1,96 @@
 import { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-
-function useTheme() {
-  const [theme, setTheme] = useState(
-    document.documentElement.getAttribute("data-theme") || "dark"
-  );
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
-  return { theme, setTheme };
-}
+import "./NavBar.css";
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
-  const loc = useLocation();
 
-  // close sheet on route change
-  useEffect(() => setOpen(false), [loc]);
+  // Lock body scroll when menu is open (mobile)
+  useEffect(() => {
+    if (open) document.body.classList.add("no-scroll");
+    else document.body.classList.remove("no-scroll");
+    return () => document.body.classList.remove("no-scroll");
+  }, [open]);
+
+  // Close on ESC
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Change this if you're using a router; call setOpen(false) on route change.
 
   return (
-    <nav className={`nav ${open ? "open" : ""}`} data-nav>
-      <div className="nav-inner">
-        <a className="brand" href="/">
-          <span className="logo-dot" aria-hidden />
+    <nav className={`nb-nav ${open ? "is-open" : ""}`}>
+      <div className="nb-inner">
+        <a className="nb-brand" href="/">
+          <span className="nb-dot" aria-hidden="true" />
           Bigyajeet
         </a>
 
         {/* Desktop links */}
-        <div className="nav-links" role="navigation" aria-label="Primary">
-          <NavLink to="/" end className={({isActive}) => isActive ? "active" : ""}>Home</NavLink>
-          <NavLink to="/projects" className={({isActive}) => isActive ? "active" : ""}>Projects</NavLink>
-          <NavLink to="/journal"  className={({isActive}) => isActive ? "active" : ""}>Journal</NavLink>
-          <NavLink to="/contact"  className={({isActive}) => isActive ? "active" : ""}>Contact</NavLink>
+        <div className="nb-links" role="navigation" aria-label="Primary">
+          <a href="/" className="active">Home</a>
+          <a href="/projects">Projects</a>
+          <a href="/journal">Journal</a>
+          <a href="/contact">Contact</a>
         </div>
 
         {/* Desktop actions */}
-        <div className="nav-actions">
-          <label className="switch" aria-label="Theme">
+        <div className="nb-actions">
+          <label className="switch" title="Toggle theme">
             <input
               type="checkbox"
-              checked={theme === "dark"}
-              onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
+              onChange={(e) =>
+                document.documentElement.setAttribute(
+                  "data-theme",
+                  e.target.checked ? "dark" : "light"
+                )
+              }
             />
             <span className="slider">
-              <span className="icon">🌙</span>
               <span className="icon">☀️</span>
+              <span className="icon">🌙</span>
             </span>
           </label>
+
           <a className="btn btn-plain" href="/Bigyajeet_Kumar_PatraResume.pdf" download>
             Resume
           </a>
-          <a className="btn" href="/#contact">Hire me</a>
+          <a className="btn" href="mailto:bigyajeetkumarpatra@gmail.com">Hire me</a>
         </div>
 
-        {/* Hamburger (mobile only via CSS) */}
+        {/* Hamburger (mobile) */}
         <button
-          className="nav-toggle"
-          aria-label="Open menu"
+          className="nb-toggle"
           aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
+          aria-controls="nb-sheet"
+          aria-label="Toggle menu"
+          onClick={() => setOpen((o) => !o)}
         >
-          ☰
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            {open ? (
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" />
+            ) : (
+              <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2" />
+            )}
+          </svg>
         </button>
       </div>
 
-      {/* Backdrop for sheet */}
-      <button
-        className="nav-backdrop"
-        aria-hidden={!open}
-        onClick={() => setOpen(false)}
-      />
+      {/* Backdrop & Sheet for mobile */}
+      <button className="nb-backdrop" aria-hidden={!open} onClick={() => setOpen(false)} />
+      <div id="nb-sheet" className="nb-sheet">
+        <a href="/" onClick={() => setOpen(false)}>Home</a>
+        <a href="/projects" onClick={() => setOpen(false)}>Projects</a>
+        <a href="/journal" onClick={() => setOpen(false)}>Journal</a>
+        <a href="/contact" onClick={() => setOpen(false)}>Contact</a>
 
-      {/* Mobile sheet menu */}
-      <div className="nav-sheet" role="dialog" aria-modal="true" aria-label="Menu">
-        <nav aria-label="Mobile">
-          <NavLink to="/" end>Home</NavLink>
-          <NavLink to="/projects">Projects</NavLink>
-          <NavLink to="/journal">Journal</NavLink>
-          <NavLink to="/contact">Contact</NavLink>
-        </nav>
-
-        <div className="sheet-actions">
-          <label className="switch" aria-label="Theme">
-            <input
-              type="checkbox"
-              checked={theme === "dark"}
-              onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
-            />
-            <span className="slider">
-              <span className="icon">🌙</span>
-              <span className="icon">☀️</span>
-            </span>
-          </label>
+        <div className="nb-sheet-actions">
           <a className="btn btn-plain" href="/Bigyajeet_Kumar_PatraResume.pdf" download>
             Resume
           </a>
-          <a className="btn" href="/#contact" onClick={() => setOpen(false)}>Hire me</a>
+          <a className="btn" href="mailto:bigyajeetkumarpatra@gmail.com">Hire me</a>
         </div>
       </div>
     </nav>
