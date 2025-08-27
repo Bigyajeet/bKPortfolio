@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
+import './NavBar.css'
 
 export default function NavBar({ onHire, onResume }) {
   const [open, setOpen] = useState(false);
