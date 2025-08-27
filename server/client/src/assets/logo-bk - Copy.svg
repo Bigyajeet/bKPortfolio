@@ -1,0 +1,18 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bkRing" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366f1"></stop>
+      <stop offset="50%" stop-color="#06b6d4"></stop>
+      <stop offset="100%" stop-color="#22c55e"></stop>
+    </linearGradient>
+  </defs>
+  <circle cx="32" cy="32" r="30" fill="#0f172a" stroke="url(#bkRing)" stroke-width="2"></circle>
+  <g opacity=".12" fill="#e5e7eb" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace" font-weight="700" font-size="16" text-anchor="middle">
+    <text x="20" y="24">&lt;</text>
+    <text x="46" y="46">/&gt;</text>
+  </g>
+  <g fill="#e5e7eb" font-family="Inter, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-weight="800" font-size="24">
+    <text x="22" y="40">b</text>
+    <text x="36" y="40">k</text>
+  </g>
+</svg>

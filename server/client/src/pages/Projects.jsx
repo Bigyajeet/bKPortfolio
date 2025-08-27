@@ -116,6 +116,7 @@ function Card({ r, i }) {
       </div>
 
       <div className="pcard-meta">
+        
         <small className="muted">{updated.toLocaleDateString()}</small>
       </div>
 

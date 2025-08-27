@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
+import LogoBK from "./LogoBk";
 import "./NavBar.css";
 
 export default function NavBar({ onHire, onResume }) {
@@ -29,10 +30,10 @@ export default function NavBar({ onHire, onResume }) {
   return (
     <nav className="navbar" data-open={open ? "true" : "false"}>
       <div className="navbar-inner">
-        <NavLink to="/" end className="navbar-brand">
-          <span className="navbar-logoDot" />
-          <span>Bigyajeet</span>
-        </NavLink>
+         <a className="navbar-brand" href="/" aria-label="Bigyajeet • Home">
+         <LogoBK size={28} />
+         <span className="sr-only">Bigyajeet</span>
+       </a>
 
         <div className="navbar-links">
           <NavLink to="/" end>Home</NavLink>
