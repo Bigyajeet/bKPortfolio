@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { api } from "../Api";
 import { Link, useNavigate } from "react-router-dom";  
 import "./Home.css";
+import Projects from "./Projects";
+import Journal from "./Journal";
+import Contact from "./Contact";
 
 export default function Home() {
   const [visits, setVisits] = useState(null);
@@ -40,6 +43,7 @@ export default function Home() {
   const goProjects = () => navigate("/projects");  
 
   return (
+    <> 
     <div className="container hero">
       <section className="hero-left">
         <span className="pill">Open to SDE Intern / Full-Time</span>
@@ -80,5 +84,9 @@ export default function Home() {
         </div>
       </aside>
     </div>
+    <Projects/>
+    <Journal/>
+    <Contact/>
+     </>
   );
 }
