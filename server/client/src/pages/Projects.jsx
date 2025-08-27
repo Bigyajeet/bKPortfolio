@@ -1,23 +1,17 @@
-
 import { useEffect, useMemo, useState } from "react";
 import "./Project.css";
 
-const GH_USER = "Bigyajeet"; 
+const GH_USER = "Bigyajeet";
 
-
-function pickVariant(id, seed, n) {
-  let x = (id + 101 * seed) % 2147483647;
-  x = (x * 48271) % 2147483647;
-  return x % n; // 0..n-1
+function shuffleArray(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
 }
-
-const shuffleArray = (arr) => [...arr].sort(() => Math.random() - 0.5);
 
 export default function Projects() {
   const [repos, setRepos] = useState([]);
   const [order, setOrder] = useState([]);
-  const [seed, setSeed] = useState(0);
   const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -30,13 +24,13 @@ export default function Projects() {
         const data = await r.json();
 
         const mapped = (Array.isArray(data) ? data : [])
-          .filter((d) => !d.fork)
-          .map((d) => ({
+          .filter(d => !d.fork)
+          .map(d => ({
             id: d.id,
             name: d.name,
             desc: d.description || "",
             lang: d.language || "Mixed",
-            stars: d.stargazers_count,
+            stars: d.stargazers_count || 0,
             url: d.html_url,
             demo: d.homepage || "",
             topics: d.topics || [],
@@ -44,14 +38,15 @@ export default function Projects() {
           }));
 
         setRepos(mapped);
-        setOrder(mapped.map((x) => x.id));
+        setOrder(mapped.map(x => x.id));
       } catch (e) {
         setErr(String(e?.message || e));
+      } finally {
+        setLoading(false);
       }
     })();
   }, []);
 
-  
   const byId = useMemo(() => {
     const m = new Map();
     for (const r of repos) m.set(r.id, r);
@@ -59,116 +54,78 @@ export default function Projects() {
   }, [repos]);
 
   const list = useMemo(
-    () => order.map((id) => byId.get(id)).filter(Boolean),
+    () => order.map(id => byId.get(id)).filter(Boolean),
     [order, byId]
   );
 
-  const onShuffle = () => {
-    setOrder((prev) => shuffleArray(prev));
-    setSeed((s) => s + 1); 
-  };
+  const onShuffle = () => setOrder(prev => shuffleArray(prev));
 
   return (
-    <div className="container">
+    <section className="container">
       <div className="row head" style={{ alignItems: "center", gap: 12 }}>
         <h2 style={{ margin: 0 }}>Projects</h2>
         <button className="btn" onClick={onShuffle}>Shuffle</button>
         {!!err && <small className="error" style={{ color: "tomato" }}>GitHub: {err}</small>}
       </div>
 
-      <div className="cards-grid" style={{ marginTop: 12 }}>
-        {list.map((r, i) => {
-          const v = pickVariant(r.id, seed, 4); 
-          const rot = ((i % 5) - 2) * 1.2;    
-          const key = `${r.id}-${seed}`;        
+      {/* skeletons while loading */}
+      {loading && (
+        <div className="cards-grid" style={{ marginTop: 12 }}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="pcard skeleton">
+              <div className="sk-title" />
+              <div className="sk-line" />
+              <div className="sk-line short" />
+              <div className="sk-meta" />
+            </div>
+          ))}
+        </div>
+      )}
 
-          if (v === 0) return <CardGradient key={key} r={r} i={i} rot={rot} />;
-          if (v === 1) return <CardStripe   key={key} r={r} i={i} rot={rot} />;
-          if (v === 2) return <CardRibbon   key={key} r={r} i={i} rot={rot} />;
-          return          <CardMinimal  key={key} r={r} i={i} rot={rot} />;
-        })}
-      </div>
+      {!loading && (
+        <>
+          <div className="cards-grid" style={{ marginTop: 12 }}>
+            {list.map((r, i) => (
+              <Card key={`${r.id}-${i}`} r={r} i={i} />
+            ))}
+          </div>
 
-      {!list.length && !err && <p className="muted">No repositories yet.</p>}
-    </div>
+          {!list.length && !err && <p className="muted">No repositories yet.</p>}
+        </>
+      )}
+    </section>
   );
 }
 
-/* ---------- Card Variants ---------- */
-
-function CardGradient({ r, i, rot }) {
+function Card({ r, i }) {
+  const updated = new Date(r.updated);
   return (
-    <div className="vcard vA appear" style={{ "--delay": `${i * 60}ms`, "--rot": `${rot}deg` }}>
-      <div className="band" />
-      <div className="content">
-        <div className="row" style={{ justifyContent: "space-between" }}>
-          <b>{r.name}</b><small>★ {r.stars}</small>
-        </div>
-        <p>{r.desc || "No description yet."}</p>
-        <div className="row" style={{ justifyContent: "space-between" }}>
-          <small>{r.lang}</small>
-          <small>{new Date(r.updated).toLocaleDateString()}</small>
-        </div>
-        <div className="row" style={{ marginTop: 10 }}>
-          <a className="btn btn-plain" href={r.url} target="_blank" rel="noreferrer">Code</a>
-          {r.demo && <a className="btn btn-ghost" href={r.demo} target="_blank" rel="noreferrer">Live</a>}
-        </div>
-      </div>
-    </div>
-  );
-}
+    <article className="pcard appear" style={{ "--delay": `${i * 60}ms` }}>
+      <header className="pcard-top">
+        <b className="pcard-title">{r.name}</b>
+        <small className="pcard-stars">★ {r.stars}</small>
+      </header>
 
-function CardStripe({ r, i, rot }) {
-  return (
-    <div className="vcard vB appear" style={{ "--delay": `${i * 60}ms`, "--rot": `${rot}deg` }}>
-      <div className="stripe" />
-      <b>{r.name}</b>
-      <p>{r.desc || "No description yet."}</p>
-      <div className="row" style={{ justifyContent: "space-between" }}>
-        <small>{r.lang}</small><small>★ {r.stars}</small>
-      </div>
-      <div className="row" style={{ marginTop: 10 }}>
-        <a className="btn btn-plain" href={r.url} target="_blank" rel="noreferrer">Code</a>
-        {r.demo && <a className="btn btn-ghost" href={r.demo} target="_blank" rel="noreferrer">Live</a>}
-      </div>
-    </div>
-  );
-}
+      <p className="pcard-desc">{r.desc || "No description yet."}</p>
 
-function CardRibbon({ r, i, rot }) {
-  return (
-    <div className="vcard vC appear" style={{ "--delay": `${i * 60}ms`, "--rot": `${rot}deg` }}>
-      <span className="ribbon">★ {r.stars}</span>
-      <b>{r.name}</b>
-      <p style={{ minHeight: 44 }}>{r.desc || "No description yet."}</p>
-      <div className="tags">
-        {(r.topics?.slice(0, 3) || []).map((t) => <span key={t} className="chip">{t}</span>)}
+      <div className="pcard-tags">
+        {(r.topics?.slice(0, 3) || []).map(t => (
+          <span key={t} className="chip">{t}</span>
+        ))}
         {!r.topics?.length && <span className="chip">{r.lang}</span>}
       </div>
-      <div className="row" style={{ marginTop: 10 }}>
-        <a className="btn btn-plain" href={r.url} target="_blank" rel="noreferrer">Code</a>
-        {r.demo && <a className="btn btn-ghost" href={r.demo} target="_blank" rel="noreferrer">Live</a>}
-      </div>
-    </div>
-  );
-}
 
-function CardMinimal({ r, i, rot }) {
-  return (
-    <div className="vcard vD appear" style={{ "--delay": `${i * 60}ms`, "--rot": `${rot}deg` }}>
-      <div className="row" style={{ justifyContent: "space-between", alignItems: "baseline" }}>
-        <b className="title">{r.name}</b>
-        <small>{new Date(r.updated).toLocaleDateString()}</small>
-      </div>
-      <p className="muted">{r.desc || "No description yet."}</p>
-      <div className="row" style={{ justifyContent: "space-between" }}>
+      <div className="pcard-meta">
         <small className="pill">{r.lang}</small>
-        <small className="pill">★ {r.stars}</small>
+        <small className="muted">{updated.toLocaleDateString()}</small>
       </div>
+
       <div className="row" style={{ marginTop: 10 }}>
         <a className="btn btn-plain" href={r.url} target="_blank" rel="noreferrer">Code</a>
-        {r.demo && <a className="btn btn-ghost" href={r.demo} target="_blank" rel="noreferrer">Live</a>}
+        {r.demo && (
+          <a className="btn btn-ghost" href={r.demo} target="_blank" rel="noreferrer">Live</a>
+        )}
       </div>
-    </div>
+    </article>
   );
 }
