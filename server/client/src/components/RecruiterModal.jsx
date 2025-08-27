@@ -51,12 +51,15 @@ const emailMe = () => {
     <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={close}>
       <div className="modal-card" onClick={(e) => e.stopPropagation()}>
         <h3 style={{ marginTop: 0 }}>Quick Overview</h3>
-        <p><b>Skills:</b> MERN, AI tools, ML,JAVA(DSA),Python & libraries ,joi tool</p>
+        <p><b>Skills:</b> </p>
         <ul>
-          <li>Built various project</li>
-          <li>Reduced report prep time by ~60%</li>
-          <li>built AIML project</li>
-          <li>Case studies that show clear impact</li>
+           <li>Frontend: React, Vite, CSS/Responsive UI</li>
+        <li>Backend: Node.js, Express, REST, Joi validation, rate-limit, CORS</li>
+        <li>Data/ML: Python, NumPy, pandas, scikit-learn, data cleaning & eval</li>
+        <li>DB/Infra: MongoDB/Atlas, SMTP/Nodemailer, Vercel, Render</li>
+        <li>Automation: n8n (workflows, webhooks, schedulers, API integrations)</li>
+        <li>Languages: Java (DSA), Python, JavaScript</li>
+        
         </ul>
         <div className="row">
           <a className="btn" href="/resume.pdf" download>View Resume (PDF)</a>

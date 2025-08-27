@@ -46,8 +46,7 @@ export default function Home() {
 
         <h1 className="h1">Hi, I’m <span className="gradient">Bigyajeet Kumar Patra</span></h1>
         <p className="subtitle">
-          I build fast, reliable <b>MERN</b> products, skilled in <b>AI/ML</b> for smart features,
-          and use <b>CP</b>-honed problem-solving with exploring ai tools.
+          I design and ship responsive web apps, automate workflows with n8n, and use Python ML to turn data into features.
         </p>
 
         <div className="metrics">
