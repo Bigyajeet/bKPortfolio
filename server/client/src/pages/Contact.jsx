@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { api } from "../Api";
 import ProfileLinks from "../components/ProfileLinks";
+import './Contact.css'
 
 const MAX_MSG = 1000;
 const MIN_MSG = 10;
@@ -9,7 +10,7 @@ const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v || "");
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "", hp: "" });
   const [touched, setTouched] = useState({});
-  const [status, setStatus] = useState({ kind: "", note: "" }); // "", "sending", "ok", "error"
+  const [status, setStatus] = useState({ kind: "", note: "" });
 
   const errors = useMemo(() => {
     const e = {};
