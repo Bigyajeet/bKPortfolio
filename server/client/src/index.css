@@ -502,26 +502,76 @@ body.no-scroll {
   .nav.open .nav-links { display: flex; }
 }
 
-/* --- Phone layout polish --- */
-.container { padding: 16px; }
-.h1 { font-size: clamp(26px, 6vw, 40px); line-height: 1.15; }
-.subtitle { font-size: clamp(14px, 3.6vw, 18px); }
+/* Ensure consistent nav height */
+.nav-inner { min-height: 56px; }
 
-.hero { gap: 24px; padding-top: 16px; }
-.hero-left { width: 100%; }
-.hero-right { width: 100%; justify-content: center; }
-.avatar { width: min(52vw, 260px); height: min(52vw, 260px); }
+/* Hide hamburger by default (desktop) */
+.nav-toggle { display: none; }
 
-.metrics { gap: 12px; }
-.metric { min-width: unset; flex: 1 1 calc(50% - 12px); }
-.metric .num { font-size: 20px; }
-.metric .label { font-size: 11px; }
+/* Mobile behaviour */
+@media (max-width: 860px) {
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px; width: 42px;
+    margin-left: auto;
+    border: 1px solid var(--chip-border);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+  }
+  /* Hide desktop links/actions on mobile */
+  .nav-links, .nav-actions { display: none; }
 
-/* CTA buttons: grid -> looks neat and prevents "blank pill" overflow */
-.ctas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 520px; }
-.ctas .btn { width: 100%; white-space: nowrap; }
-@media (max-width: 420px) { .ctas { grid-template-columns: 1fr; } }
+  /* Sheet menu */
+  .nav-sheet {
+    display: none;
+    position: fixed;
+    top: 56px; /* matches .nav-inner height */
+    left: 0; right: 0; bottom: 0;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 14px 16px;
+    overflow: auto;
+  }
+  .nav.open .nav-sheet { display: block; }
 
-/* anchor buttons always keep text color */
-.btn, .btn * { color: inherit !important; }
-/* (you already have rules for visited states; keeping these enforces them) */
+  .nav-sheet a {
+    display: block;
+    padding: 12px 10px;
+    border-radius: 10px;
+    color: var(--text);
+  }
+  .nav-sheet a:hover { background: rgba(99,102,241,.08); }
+
+  .sheet-actions {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 420px) {
+    .sheet-actions { grid-template-columns: 1fr; }
+  }
+
+  /* Backdrop */
+  .nav-backdrop {
+    display: none;
+  }
+  .nav.open .nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    border: none;
+    background: rgba(0,0,0,.35);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+  }
+}
+
+/* General mobile fit & spacing helpers */
+.container { padding-inline: clamp(12px, 3.5vw, 24px); }
+.section { padding: clamp(32px, 6vw, 72px) 0; }
+[id] { scroll-margin-top: 80px; } /* anchors don't hide under sticky nav */
+html { scroll-behavior: smooth; }
