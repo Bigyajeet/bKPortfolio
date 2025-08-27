@@ -62,7 +62,7 @@ const emailMe = () => {
         
         </ul>
         <div className="row">
-          <a className="btn" href="/resume.pdf" download>View Resume (PDF)</a>
+          <a className="btn" href="/resume.pdf" download>View Resume</a>
           <a className="btn" href="/projects">Top Project</a>
         <button className="btn" onClick={emailMe}>Email Me</button>
         <a className="btn" href="https://calendly.com/your-link">Book a Slot</a>
