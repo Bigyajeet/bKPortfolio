@@ -1,4 +1,6 @@
-
+// server/server.js
+// Portfolio API — Express + Mongoose + Nodemailer
+// ESM file (package.json should have: "type": "module")
 
 import express from "express";
 import mongoose from "mongoose";
@@ -10,174 +12,214 @@ import nodemailer from "nodemailer";
 
 dotenv.config();
 
-/* middleware  */
+/* ------------------------------ App setup ------------------------------ */
+
 const app = express();
+app.set("trust proxy", 1); // important on Render / proxies
 
-app.use(morgan("tiny"));
 app.use(express.json());
+app.use(morgan("tiny"));
 
-
-const allow = new Set(
-  (process.env.CLIENT_ORIGIN ||
-    "http://localhost:5173,http://127.0.0.1:5173")
-    .split(",")
-    .map(s => s.trim())
-    .filter(Boolean)
-);
-
-const corsMw = cors({
-  origin(origin, cb) {
-    if (!origin || allow.has(origin)) return cb(null, true);
-    return cb(new Error("Not allowed by CORS"));
-  },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Admin-Secret"],
-  credentials: true,
-  maxAge: 86400
+// tiny helper so proxies/CDNs can cache CORS decisions properly
+app.use((req, res, next) => {
+  res.setHeader("Vary", "Origin");
+  next();
 });
-app.use(corsMw);
-app.options(/.*/, corsMw);           
 
-
+// silence favicon noise
 app.get("/favicon.ico", (_req, res) => res.status(204).end());
 
-/*  MongoDB  */
-mongoose.connection.on("connected", () =>
-  console.log("✅ Mongo connected:", mongoose.connection.host)
-);
-mongoose.connection.on("error", (err) =>
-  console.error("❌ Mongo error:", err.message)
-);
-mongoose.connection.on("disconnected", () =>
-  console.warn("⚠️ Mongo disconnected")
-);
+/* ---------------------------- Mongo connection ---------------------------- */
 
-mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 10000 });
+mongoose.connection.on("connected", () => {
+  console.log("✅ Mongo connected:", mongoose.connection.host);
+});
+mongoose.connection.on("error", (err) => {
+  console.error("❌ Mongo error:", err.message);
+});
+mongoose.connection.on("disconnected", () => {
+  console.warn("⚠️ Mongo disconnected");
+});
 
-/* Models  */
+if (!process.env.MONGO_URI) {
+  console.warn("⚠️ MONGO_URI not set");
+}
+mongoose.connect(process.env.MONGO_URI || "", {
+  serverSelectionTimeoutMS: 10000,
+});
+
+/* -------------------------------- Models -------------------------------- */
+
 const { Schema, model, models } = mongoose;
 
-const Project = models.Project || model(
-  "Project",
-  new Schema({
-    title: String,
-    summary: String,
-    tech: [String],
-    github: String,
-    demo: String,
-    cover: String,
-    impact: String,
-    createdAt: { type: Date, default: Date.now }
-  })
-);
+const Project =
+  models.Project ||
+  model(
+    "Project",
+    new Schema({
+      title: String,
+      summary: String,
+      tech: [String],
+      github: String,
+      demo: String,
+      cover: String,
+      impact: String,
+      createdAt: { type: Date, default: Date.now },
+    })
+  );
 
-const Blog = models.Blog || model(
-  "Blog",
-  new Schema({
-    title: String,
-    content: String,
-    tags: [String],
-    createdAt: { type: Date, default: Date.now }
-  })
-);
+const Blog =
+  models.Blog ||
+  model(
+    "Blog",
+    new Schema({
+      title: String,
+      content: String,
+      tags: [String],
+      createdAt: { type: Date, default: Date.now },
+    })
+  );
 
-const Message = models.Message || model(
-  "Message",
-  new Schema({
-    name: String,
-    email: String,
-    message: String,
-    createdAt: { type: Date, default: Date.now }
-  })
-);
+const Message =
+  models.Message ||
+  model(
+    "Message",
+    new Schema({
+      name: String,
+      email: String,
+      message: String,
+      createdAt: { type: Date, default: Date.now },
+    })
+  );
 
-const Stat = models.Stat || model(
-  "Stat",
-  new Schema({
-    key: { type: String, unique: true },
-    value: { type: Number, default: 0 }
-  })
-);
+const Stat =
+  models.Stat ||
+  model(
+    "Stat",
+    new Schema({
+      key: { type: String, unique: true },
+      value: { type: Number, default: 0 },
+    })
+  );
 
-const Event = models.Event || model(
-  "Event",
-  new Schema({
-    action: String,
-    label: String,
-    ts: { type: Date, default: Date.now }
-  })
-);
+const Event =
+  models.Event ||
+  model(
+    "Event",
+    new Schema({
+      action: String,
+      label: String,
+      ts: { type: Date, default: Date.now },
+    })
+  );
 
+/* ------------------------------ Admin helper ----------------------------- */
 
 function adminOnly(req, res, next) {
   if (req.headers["x-admin-secret"] === process.env.ADMIN_SECRET) return next();
   return res.status(401).json({ error: "unauthorized" });
 }
 
+/* --------------------------------- CORS ---------------------------------- */
+/**
+ * Allow-list with simple wildcard support (e.g. https://b-k-portfolio-*.vercel.app)
+ * Set env: CLIENT_ORIGIN=origin1,origin2,origin-with-*.example.com,http://localhost:5173
+ */
+
+const rawOrigins = (process.env.CLIENT_ORIGIN || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+const originPatterns = rawOrigins.map((entry) => {
+  if (!entry.includes("*")) return { exact: entry };
+  const re = new RegExp(
+    "^" +
+      entry
+        .split("*")
+        .map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+        .join(".*") +
+      "$"
+  );
+  return { re };
+});
+
+function isAllowed(origin) {
+  if (!origin) return true; // same-origin/curl/postman
+  if (originPatterns.some((p) => p.exact === origin)) return true;
+  if (originPatterns.some((p) => p.re?.test(origin))) return true;
+  if (/^http:\/\/localhost(:\d+)?$/.test(origin)) return true;
+  return false;
+}
+
+const corsOptions = {
+  origin(origin, cb) {
+    if (isAllowed(origin)) return cb(null, true);
+    cb(new Error("Not allowed by CORS"));
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Admin-Secret"],
+  credentials: true,
+  maxAge: 86400,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // handle preflight cleanly
+
+/* ----------------------------- Mail Transport ---------------------------- */
 
 function makeTransporter() {
-  const port = Number(process.env.SMTP_PORT || 587);
-  const secure = port === 465;            
-  const relax = String(process.env.INSECURE_TLS).toLowerCase() === "true";
+  const port = Number(process.env.SMTP_PORT || 465);
+  const secure = port === 465; // 465 = SSL/TLS, 587 = STARTTLS
+
+  const allowInsecure = String(process.env.ALLOW_INSECURE_TLS || "").toLowerCase() === "true";
 
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST || "smtp.gmail.com",
     port,
-    secure,                                
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+    secure,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS, // Gmail App Password for Gmail accounts
+    },
     tls: {
-      servername: "smtp.gmail.com",
-      rejectUnauthorized: !relax        
+      servername: process.env.SMTP_HOST || "smtp.gmail.com",
+      // For some corporate dev networks you might need this during local testing.
+      // Never set to true in production unless you understand the risk.
+      rejectUnauthorized: !allowInsecure,
     },
     logger: true,
-    debug: true
+    debug: true,
   });
 }
 
-const contactLimiter = rateLimit({ windowMs: 60 * 1000, max: 20 });
-const isEmail = (v = "") => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+/* --------------------------------- Health -------------------------------- */
 
-/*  Routes  */
-// Health
 app.get("/", (_req, res) => res.json({ ok: true, service: "portfolio-api" }));
-
-
-app.get("/api/ping", async (_req, res) => {
-  try {
-    const doc = await Stat.findOneAndUpdate(
-      { key: "visits" }, { $inc: { value: 1 } }, { upsert: true, new: true }
-    );
-    res.json({ ok: true, visits: doc.value });
-  } catch {
-    res.status(500).json({ error: "stat_error" });
-  }
-});
-
 
 app.get("/api/_debug/smtp", async (_req, res) => {
   try {
     await makeTransporter().verify();
     res.json({ ok: true });
   } catch (e) {
-    res.status(500).json({ ok: false, error: String(e.message || e) });
+    res.status(500).json({ ok: false, error: String(e?.message || e) });
   }
 });
 
-// One-click test email
-app.get("/api/_debug/smtp/send", async (_req, res) => {
+/* ------------------------------- Public API ------------------------------ */
+
+app.get("/api/ping", async (_req, res) => {
   try {
-    const info = await makeTransporter().sendMail({
-      from: `"Portfolio" <${process.env.SMTP_USER}>`,
-      to: process.env.OWNER_EMAIL,
-      subject: "SMTP test from API",
-      text: "If you see this, sending works."
-    });
-    res.json({ ok: true, messageId: info.messageId });
-  } catch (e) {
-    res.status(500).json({ ok: false, error: String(e.message || e) });
+    const doc = await Stat.findOneAndUpdate(
+      { key: "visits" },
+      { $inc: { value: 1 } },
+      { upsert: true, new: true }
+    );
+    res.json({ ok: true, visits: doc.value });
+  } catch {
+    res.status(500).json({ ok: false, error: "stat_error" });
   }
 });
-
 
 app.get("/api/projects", async (_req, res) => {
   const items = await Project.find().sort({ createdAt: -1 });
@@ -189,65 +231,57 @@ app.get("/api/blogs", async (_req, res) => {
   res.json(items);
 });
 
+/* --------------------------- Contact (save + mail) ----------------------- */
 
-app.post("/api/blogs", adminOnly, async (req, res) => {
-  const { title = "", content = "", tags = [] } = req.body || {};
-  if (!title.trim() || !content.trim())
-    return res.status(400).json({ error: "title_content_required" });
-  const doc = await Blog.create({ title, content, tags });
-  res.json({ ok: true, id: doc._id });
+const contactLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,
 });
-
-
 
 app.post("/api/messages", contactLimiter, async (req, res) => {
   try {
     const { name = "", email = "", message = "", hp = "" } = req.body || {};
-    console.log("CONTACT_REQ", { name, email, len: (message || "").length, hp: !!hp });
+    if (hp) return res.json({ ok: true }); // honeypot
 
-    if (hp) return res.json({ ok: true, skipped: true }); // honeypot
-    if (!name.trim() || !message.trim())
-      return res.status(400).json({ error: "name_message_required" });
+    if (!name.trim() || !message.trim()) {
+      return res.status(400).json({ ok: false, error: "name_message_required" });
+    }
 
+    // 1) Save
     const saved = await Message.create({ name, email, message });
 
-    let emailed = false, messageId = null;
-    if (process.env.SEND_EMAILS !== "false") {
-      try {
-        const t = makeTransporter();
+    // 2) Email notification (skip if SEND_EMAILS=false)
+    if (String(process.env.SEND_EMAILS || "true").toLowerCase() !== "false") {
+      const t = makeTransporter();
 
-        const info1 = await t.sendMail({
-          from: `"Portfolio" <${process.env.SMTP_USER}>`,
-          to: process.env.OWNER_EMAIL,
-          replyTo: email || undefined,
-          subject: `New portfolio message from ${name}`,
-          text: `${message}\n\nFrom: ${name} <${email || "no-email"}>`
+      await t.sendMail({
+        from: `"Portfolio" <${process.env.SMTP_USER}>`,
+        to: process.env.OWNER_EMAIL,
+        replyTo: email || undefined,
+        subject: `New portfolio message from ${name}`,
+        text: `${message}\n\nFrom: ${name} <${email || "no-email"}>`,
+        html: `<p>${String(message).replace(/\n/g, "<br/>")}</p>
+               <p>From: <b>${name}</b> ${email ? "&lt;" + email + "&gt;" : ""}</p>`,
+      });
+
+      if (email) {
+        await t.sendMail({
+          from: `"${process.env.SMTP_USER}" <${process.env.SMTP_USER}>`,
+          to: email,
+          subject: "Thanks for reaching out",
+          text: `Hi ${name},\n\nThanks for your message. I’ll get back to you soon.\n\n— Bigyajeet`,
         });
-        console.log("MAIL_SENT owner", info1.messageId);
-        messageId = info1.messageId;
-
-        if (email && isEmail(email)) {
-          const info2 = await t.sendMail({
-            from: `"${process.env.SMTP_USER}" <${process.env.SMTP_USER}>`,
-            to: email,
-            subject: "Thanks for reaching out",
-            text: `Hi ${name},\n\nThanks for your message. I’ll get back to you soon.\n\n— Bigyajeet`
-          });
-          console.log("MAIL_SENT autoreply", info2.messageId);
-        }
-        emailed = true;
-      } catch (e) {
-        console.error("MAIL_FAIL", e);
       }
     }
 
-    return res.json({ ok: true, id: saved._id, emailed, messageId });
+    res.json({ ok: true, id: saved._id });
   } catch (e) {
-    console.error("CONTACT_ERROR", e);
-    return res.status(500).json({ error: String(e.message || e) });
+    console.error("CONTACT_ERROR:", e);
+    res.status(500).json({ ok: false, error: "contact_failed" });
   }
 });
 
+/* ------------------------------ Simple analytics ------------------------- */
 
 app.post("/api/track", async (req, res) => {
   const { action = "unknown", label = "" } = req.body || {};
@@ -255,10 +289,11 @@ app.post("/api/track", async (req, res) => {
   res.json({ ok: true });
 });
 
-
+/* -------------------------------- Admin seed ----------------------------- */
 
 app.post("/api/admin/seed", adminOnly, async (_req, res) => {
   await Promise.all([Project.deleteMany({}), Blog.deleteMany({})]);
+
   await Project.create([
     {
       title: "Spark SQL Workshop",
@@ -266,15 +301,24 @@ app.post("/api/admin/seed", adminOnly, async (_req, res) => {
       tech: ["Spark", "PySpark", "SQL", "React"],
       github: "https://github.com/yourname/spark-sql-workshop",
       cover: "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
-      impact: "Helped 60+ students; 90% positive feedback."
-    }
+      impact: "Helped 60+ students; 90% positive feedback.",
+    },
   ]);
+
   await Blog.create([
-    { title: "What I learned building my first MERN app", content: "Ship v1, then iterate.", tags: ["mern"] }
+    {
+      title: "What I learned building my first MERN app",
+      content: "Ship v1, then iterate.",
+      tags: ["mern"],
+    },
   ]);
+
   res.json({ ok: true });
 });
 
+/* ------------------------------- Start server ---------------------------- */
 
-const port = Number(process.env.PORT || 5000);
-app.listen(port, () => console.log(`🚀 Server on http://localhost:${port}`));
+const port = process.env.PORT || 5000;
+app.listen(port, () =>
+  console.log(` Server on http://localhost:${port}`)
+);
