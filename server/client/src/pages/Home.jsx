@@ -46,7 +46,7 @@ const emailMe = () => {
         <h1 className="h1">Hi, I’m <span className="gradient">Bigyajeet Kumar Patra</span></h1>
         <p className="subtitle">
   I build fast, reliable <b>MERN</b> products, skilled in <b>AI/ML</b> for smart features,
-  and use <b>CP</b>-honed problem-solving.
+  and use <b>CP</b>-honed problem-solving and exploring current ai new tools.
 </p>
 
 
@@ -59,9 +59,9 @@ const emailMe = () => {
 
         <div className="row ctas">
           <button className="btn" onClick={openRecruiter}>Recruiter Mode</button>
-          <a className="btn btn-plain" href="/Bigyajeet_Kumar_PatraResume.pdf" download>Download Resume</a>
+          <button className="btn btn-plain" href="/Bigyajeet_Kumar_PatraResume.pdf" download>Download Resume</button>
 <button className="btn btn-plain" onClick={emailMe}>Email me</button>
-  <a className="btn btn-ghost" href="/projects">View Projects</a>
+  < button className="btn btn-ghost" href="/projects">View Projects</button>
         </div>
 
        
