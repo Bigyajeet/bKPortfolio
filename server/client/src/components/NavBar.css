@@ -1,0 +1,44 @@
+/* Sticky that works widely + fallback */
+.nav {
+  position: sticky;
+  position: -webkit-sticky; /* iOS */
+  top: env(safe-area-inset-top, 0);
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+/* If a browser doesn’t support sticky, fall back to fixed */
+@supports not (position: sticky) {
+  .nav { position: fixed; top: 0; left: 0; right: 0; }
+  body { padding-top: 56px; } /* adjust if your bar is taller */
+}
+
+/* Mobile menu toggle */
+.nav-toggle { display: none; }
+@media (max-width: 860px) {
+  .nav-inner { position: relative; }
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px; width: 42px;
+    border-radius: 8px;
+    border: 1px solid var(--chip-border);
+    background: var(--card);
+    color: var(--text);
+  }
+  .nav-links {
+    display: none;
+    position: absolute;
+    left: 0; right: 0; top: 100%;
+    padding: 10px 16px;
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    gap: 8px;
+  }
+  .nav.open .nav-links { display: flex; }
+}
