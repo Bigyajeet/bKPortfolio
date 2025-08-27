@@ -4,7 +4,7 @@ import './ThemeToggle.css'
 function getInitialTheme() {
   const saved = localStorage.getItem("theme");
   if (saved === "light" || saved === "dark") return saved;
-  // default to system preference
+
   return window.matchMedia &&
     window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"

@@ -8,7 +8,7 @@ function formatDate(iso) {
 }
 function readMins(text) {
   const w = (text || "").trim().split(/\s+/).length;
-  return Math.max(1, Math.round(w / 180)); // ~180wpm
+  return Math.max(1, Math.round(w / 180));
 }
 
 export default function Journal() {
@@ -80,7 +80,7 @@ export default function Journal() {
         )}
       </div>
 
-      {/* Optional: tiny admin form (local only). Remove in production. */}
+     
       <details style={{ marginTop: 20 }}>
         <summary>Add entry (local admin)</summary>
         <AdminQuickAdd onAdded={(post) => setPosts([post, ...posts])} />

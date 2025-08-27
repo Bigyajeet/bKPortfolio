@@ -55,7 +55,6 @@ export default function Contact() {
         body: JSON.stringify(form)
       });
 
-      // robust error handling: read body even on non-2xx
       const text = await r.text();
       let data = {};
       try { data = text ? JSON.parse(text) : {}; } catch { /* keep empty */ }
@@ -75,13 +74,13 @@ export default function Contact() {
     <div className="container">
       <h2>Contact</h2>
 
-      {/* Status banner */}
+ 
       {status.kind === "ok" && <div className="banner ok">✅ {status.note}</div>}
       {status.kind === "error" && <div className="banner error">⚠️ {status.note}</div>}
 
       <form className="contact-pro" onSubmit={submit} noValidate>
         <div className={`row-2`}>
-          {/* Name */}
+          
           <div className={`field ${touched.name && errors.name ? "has-error" : ""}`}>
             <label htmlFor="name">Your name *</label>
             <div className="input-wrap">
@@ -98,7 +97,7 @@ export default function Contact() {
             {touched.name && errors.name && <small className="error">{errors.name}</small>}
           </div>
 
-          {/* Email */}
+          
           <div className={`field ${touched.email && errors.email ? "has-error" : ""}`}>
             <label htmlFor="email">Email (optional)</label>
             <div className="input-wrap">
@@ -117,7 +116,7 @@ export default function Contact() {
           </div>
         </div>
 
-        {/* Message */}
+   
         <div className={`field ${touched.message && errors.message ? "has-error" : ""}`}>
           <label htmlFor="message">Your message *</label>
           <div className="input-wrap textarea">
@@ -139,7 +138,7 @@ export default function Contact() {
           </div>
         </div>
 
-        {/* Honeypot */}
+       
         <input
           style={{ display: "none" }}
           tabIndex={-1}

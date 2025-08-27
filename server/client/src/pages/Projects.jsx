@@ -1,10 +1,10 @@
-// src/pages/Projects.jsx
+
 import { useEffect, useMemo, useState } from "react";
 import "./Project.css";
 
-const GH_USER = "Bigyajeet"; // change if needed
+const GH_USER = "Bigyajeet"; 
 
-// deterministic “variant” picker so each shuffle can change the card look
+
 function pickVariant(id, seed, n) {
   let x = (id + 101 * seed) % 2147483647;
   x = (x * 48271) % 2147483647;
@@ -51,7 +51,7 @@ export default function Projects() {
     })();
   }, []);
 
-  // quick id→repo map so we can keep a separate “order” array
+  
   const byId = useMemo(() => {
     const m = new Map();
     for (const r of repos) m.set(r.id, r);
@@ -65,7 +65,7 @@ export default function Projects() {
 
   const onShuffle = () => {
     setOrder((prev) => shuffleArray(prev));
-    setSeed((s) => s + 1); // forces new keys so cards remount with new variants
+    setSeed((s) => s + 1); 
   };
 
   return (
@@ -78,9 +78,9 @@ export default function Projects() {
 
       <div className="cards-grid" style={{ marginTop: 12 }}>
         {list.map((r, i) => {
-          const v = pickVariant(r.id, seed, 4); // 4 visual templates
-          const rot = ((i % 5) - 2) * 1.2;      // tiny playful angle
-          const key = `${r.id}-${seed}`;        // new div each shuffle
+          const v = pickVariant(r.id, seed, 4); 
+          const rot = ((i % 5) - 2) * 1.2;    
+          const key = `${r.id}-${seed}`;        
 
           if (v === 0) return <CardGradient key={key} r={r} i={i} rot={rot} />;
           if (v === 1) return <CardStripe   key={key} r={r} i={i} rot={rot} />;

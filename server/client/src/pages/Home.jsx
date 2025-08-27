@@ -1,12 +1,12 @@
 // Home.jsx
 import { useEffect, useState } from "react";
 import { api } from "../Api";
-import { Link, useNavigate } from "react-router-dom";  // ← add this
+import { Link, useNavigate } from "react-router-dom";  
 import "./Home.css";
 
 export default function Home() {
   const [visits, setVisits] = useState(null);
-  const navigate = useNavigate();                     // ← add this
+  const navigate = useNavigate();                    
 
   useEffect(() => {
     api("/api/ping").then(r => r.json()).then(d => setVisits(d.visits));
@@ -36,8 +36,8 @@ export default function Home() {
     }, 700);
   };
 
-  // optional: if you insist on <button> to navigate:
-  const goProjects = () => navigate("/projects");     // ← programmatic nav
+ 
+  const goProjects = () => navigate("/projects");  
 
   return (
     <div className="container hero">
@@ -47,7 +47,7 @@ export default function Home() {
         <h1 className="h1">Hi, I’m <span className="gradient">Bigyajeet Kumar Patra</span></h1>
         <p className="subtitle">
           I build fast, reliable <b>MERN</b> products, skilled in <b>AI/ML</b> for smart features,
-          and use <b>CP</b>-honed problem-solving.
+          and use <b>CP</b>-honed problem-solving with exploring ai tools.
         </p>
 
         <div className="metrics">
@@ -57,23 +57,21 @@ export default function Home() {
         </div>
 
         <div className="row ctas">
-          {/* ACTION: keep button */}
+    
           <button className="btn" type="button" onClick={openRecruiter}>Recruiter Mode</button>
 
-          {/* DOWNLOAD/EXTERNAL: keep anchor */}
+  
           <a className="btn btn-plain" href="/Bigyajeet_Kumar_PatraResume.pdf" download>
             Download Resume
           </a>
 
-          {/* ACTION: keep button */}
+    
           <button className="btn btn-plain" type="button" onClick={emailMe}>Email me</button>
 
-          {/* INTERNAL NAV: prefer Link (best) */}
+
           <Link className="btn btn-ghost" to="/projects">View Projects</Link>
 
-          {/* If you insist on <button> for nav, use this instead of Link:
-          <button className="btn btn-ghost" type="button" onClick={goProjects}>View Projects</button>
-          */}
+          
         </div>
       </section>
 

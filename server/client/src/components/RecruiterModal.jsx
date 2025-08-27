@@ -4,15 +4,15 @@ import ProfileLinks from "./ProfileLinks";
 import './RecruiterModal'
 export default function RecruiterModal() {
   const [show, setShow] = useState(false);
-  // add this helper near the top of the component
+  
 const emailMe = () => {
   const to = "bigyajeetkumarpatra@gmail.com";
   const subject = "Interview inquiry";
   const body = "Hi Bigyajeet,\n\nWe'd like to connect about an opportunity.";
   const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  // try default mail app
+
   window.location.href = mailto;
-  // fallback to Gmail compose if the OS doesn't handle mailto
+ 
   setTimeout(() => {
     if (document.visibilityState === "visible") {
       const gmail = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -22,7 +22,7 @@ const emailMe = () => {
 };
 
 
-  // open from button or #recruiter hash
+
   useEffect(() => {
     const open = () => setShow(true);
     window.addEventListener("recruiter:open", open);
@@ -30,7 +30,7 @@ const emailMe = () => {
     return () => window.removeEventListener("recruiter:open", open);
   }, []);
 
-  // lock body scroll + close on ESC when open
+ 
   useEffect(() => {
     if (!show) return;
     document.body.classList.add("no-scroll");
@@ -50,11 +50,12 @@ const emailMe = () => {
   const modal = (
     <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={close}>
       <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-        <h3 style={{ marginTop: 0 }}>Quick Recruiter Summary</h3>
-        <p><b>Skills:</b> MERN, Spark, AI tools, Cloud</p>
+        <h3 style={{ marginTop: 0 }}>Quick Overview</h3>
+        <p><b>Skills:</b> MERN, AI tools, ML,JAVA(DSA),Python & libraries ,joi tool</p>
         <ul>
-          <li>Built 3+ apps with ~90% positive feedback</li>
+          <li>Built various project</li>
           <li>Reduced report prep time by ~60%</li>
+          <li>built AIML project</li>
           <li>Case studies that show clear impact</li>
         </ul>
         <div className="row">

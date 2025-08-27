@@ -1,7 +1,9 @@
-/* Disable scroll when modal open */
-body.no-scroll { overflow: hidden; }
 
-/* Modal sits above all content */
+body.no-scroll { 
+  overflow: hidden; 
+}
+
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -10,7 +12,6 @@ body.no-scroll { overflow: hidden; }
   display: flex;
   justify-content: center;
   align-items: center;
-  /* nice blur (optional) */
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
 }

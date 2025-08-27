@@ -1,10 +1,12 @@
 
 
-.cards-grid{ display:grid; 
+.cards-grid{
+   display:grid; 
   grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
    gap:16px;
    }
-.appear{ animation: popIn .55s var(--delay,0ms) both cubic-bezier(.2,.65,.25,1);
+.appear{ 
+  animation: popIn .55s var(--delay,0ms) both cubic-bezier(.2,.65,.25,1);
          transform: rotate(var(--rot,0deg)); }
 @keyframes popIn{
   0%{
@@ -62,17 +64,32 @@
 
 .vB{ padding-left:18px; }
 .vB .stripe{
-  position:absolute; left:0; top:0; bottom:0; width:6px;
+  position:absolute; 
+  left:0;
+   top:0; 
+   bottom:0; 
+   width:6px;
   background:linear-gradient(#60a5fa,#22c55e);
   border-radius:16px 0 0 16px;
 }
 
 .vC .ribbon{
-  position:absolute; top:10px; right:10px;
-  background:#1d4ed8; color:#fff; font-size:12px;
-  padding:3px 8px; border-radius:8px;
+  position:absolute; 
+  top:10px;
+   right:10px;
+  background:#1d4ed8;
+   color:#fff; 
+   font-size:12px;
+  padding:3px 8px;
+   border-radius:8px;
 }
-.vC .tags{ display:flex; gap:6px; flex-wrap:wrap; margin-top:4px; }
+.vC .tags{
+   display:flex;
+    gap:6px; 
+    flex-wrap:wrap; 
+    margin-top:4px; }
 
 
-.vD .title{ font-size:18px; }
+.vD .title{ 
+  font-size:18px; 
+}

@@ -1,7 +1,7 @@
-/* Sticky that works widely + fallback */
+
 .nav {
   position: sticky;
-  position: -webkit-sticky; /* iOS */
+  position: -webkit-sticky; 
   top: env(safe-area-inset-top, 0);
   z-index: 1000;
   backdrop-filter: blur(10px);
@@ -10,13 +10,13 @@
   border-bottom: 1px solid var(--border);
 }
 
-/* If a browser doesn’t support sticky, fall back to fixed */
+
 @supports not (position: sticky) {
   .nav { position: fixed; top: 0; left: 0; right: 0; }
-  body { padding-top: 56px; } /* adjust if your bar is taller */
+  body { padding-top: 56px; } 
 }
 
-/* Mobile menu toggle */
+
 .nav-toggle { display: none; }
 @media (max-width: 860px) {
   .nav-inner { position: relative; }
