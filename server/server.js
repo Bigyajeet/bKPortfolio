@@ -19,10 +19,10 @@ app.get("/favicon.ico", (_req, res) => res.status(204).end());
 
 // Mongo
 mongoose.connection.on("connected", () => {
-  console.log("✅ Mongo connected:", mongoose.connection.host);
+  console.log(" Mongo connected:", mongoose.connection.host);
 });
-mongoose.connection.on("error", (err) => console.error("❌ Mongo error:", err.message));
-mongoose.connection.on("disconnected", () => console.warn("⚠️ Mongo disconnected"));
+mongoose.connection.on("error", (err) => console.error(" Mongo error:", err.message));
+mongoose.connection.on("disconnected", () => console.warn("Mongo disconnected"));
 mongoose.connect(process.env.MONGO_URI || "", { serverSelectionTimeoutMS: 10000 });
 
 // Models
