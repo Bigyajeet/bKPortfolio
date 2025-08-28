@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { api } from "../Api";
-import ProfileLinks from "../components/ProfileLinks";
+
 import './Contact.css'
 
 const MAX_MSG = 1000;

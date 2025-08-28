@@ -1,4 +1,4 @@
-// server/server.js
+
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
@@ -49,7 +49,7 @@ function adminOnly(req, res, next) {
   return res.status(401).json({ error: "unauthorized" });
 }
 
-/* ---------------- CORS (Express 5-safe) ---------------- */
+/*CORS */
 
 const rawOrigins = (process.env.CLIENT_ORIGIN || "")
   .split(",").map(s => s.trim()).filter(Boolean);
@@ -60,7 +60,7 @@ const originPatterns = rawOrigins.map(v => {
   return { re };
 });
 function isAllowed(origin) {
-  if (!origin) return true; // curl/postman/same-origin
+  if (!origin) return true;
   if (originPatterns.some(p => p.exact === origin)) return true;
   if (originPatterns.some(p => p.re?.test(origin))) return true;
   if (/^http:\/\/localhost(:\d+)?$/.test(origin)) return true;
@@ -73,10 +73,10 @@ const corsOptions = {
   credentials: true,
   maxAge: 86400
 };
-// Apply once, BEFORE routes. No '*' routes needed.
+
 app.use(cors(corsOptions));
 
-/* ---------------- Mail ---------------- */
+/*  Mail  */
 
 function makeTransporter() {
   const port = Number(process.env.SMTP_PORT || 465);
@@ -91,26 +91,35 @@ function makeTransporter() {
   });
 }
 
-/* ---------------- Health ---------------- */
+/* Health  */
 
-app.get("/", (_req, res) => res.json({ ok: true, service: "portfolio-api" }));
+app.get("/", (_req, res) => res.json(
+  { 
+    ok: true, service: "portfolio-api" }
+
+));
 app.get("/api/_debug/smtp", async (_req, res) => {
   try { await makeTransporter().verify(); res.json({ ok: true }); }
   catch (e) { res.status(500).json({ ok: false, error: String(e?.message || e) }); }
 });
 
-/* ---------------- Public ---------------- */
+/*  Public  */
 
 app.get("/api/ping", async (_req, res) => {
   try {
     const doc = await Stat.findOneAndUpdate({ key: "visits" }, { $inc: { value: 1 } }, { upsert: true, new: true });
-    res.json({ ok: true, visits: doc.value });
-  } catch { res.status(500).json({ ok: false, error: "stat_error" }); }
+    res.json({
+       ok: true, visits: doc.value 
+      });
+  } catch {
+     res.status(500).json({ ok: false, error: "stat_error"
+
+      }); }
 });
 app.get("/api/projects", async (_req, res) => res.json(await Project.find().sort({ createdAt: -1 })));
 app.get("/api/blogs", async (_req, res) => res.json(await Blog.find().sort({ createdAt: -1 })));
 
-/* ---------------- Contact ---------------- */
+/*  Contact  */
 
 const contactLimiter = rateLimit({ windowMs: 60 * 1000, max: 20 });
 app.post("/api/messages", contactLimiter, async (req, res) => {
@@ -147,7 +156,7 @@ app.post("/api/messages", contactLimiter, async (req, res) => {
   }
 });
 
-/* ---------------- Analytics & admin ---------------- */
+
 
 app.post("/api/track", async (req, res) => {
   const { action = "unknown", label = "" } = req.body || {};
@@ -169,7 +178,7 @@ app.post("/api/admin/seed", adminOnly, async (_req, res) => {
   res.json({ ok: true });
 });
 
-/* ---------------- Start ---------------- */
+
 
 const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`🚀 Server on http://localhost:${port}`));
+app.listen(port, () => console.log(`Server on http://localhost:${port}`));
