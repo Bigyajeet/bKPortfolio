@@ -1,4 +1,4 @@
-// src/components/NavBar.jsx
+
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
@@ -44,18 +44,18 @@ export default function NavBar({ onHire, onResume }) {
 
         <div className="navbar-spacer" />
 
-        {/* Always visible toggle (mobile + desktop) */}
+       
         <div className="navbar-theme">
           <ThemeToggle />
         </div>
 
-        {/* Hidden on mobile, visible on desktop */}
+  
         <div className="navbar-actionsDesktop">
           <button type="button" className="chip" onClick={handleResume}>Resume</button>
           <button type="button" className="btn btn-sm" onClick={handleHire}>Hire me</button>
         </div>
 
-        {/* Hamburger (mobile only) */}
+       
         <button
           type="button"
           className="navbar-toggle"
@@ -68,14 +68,14 @@ export default function NavBar({ onHire, onResume }) {
         </button>
       </div>
 
-      {/* Backdrop (mobile sheet) */}
+     
       <div
         className="navbar-backdrop"
         aria-hidden="true"
         onClick={() => setOpen(false)}
       />
 
-      {/* Mobile sheet menu */}
+
       <div id="navSheet" className="navbar-sheet" role="dialog" aria-modal="true">
         <NavLink to="/" end ref={firstLinkRef}>Home</NavLink>
         <NavLink to="/projects">Projects</NavLink>

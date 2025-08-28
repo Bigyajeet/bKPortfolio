@@ -8,7 +8,7 @@ export default function RecruiterModal() {
 const emailMe = () => {
   const to = "bigyajeetkumarpatra@gmail.com";
   const subject = "Interview inquiry";
-  const body = "Hi Bigyajeet,\n\nWe'd like to connect about an opportunity.";
+  const body = "Hi Bigyajeet Kumar Patra,\n\nWe'd like to connect about an opportunity.";
   const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
   window.location.href = mailto;
@@ -42,7 +42,9 @@ const emailMe = () => {
     };
   }, [show]);
 
-  const close = () => { setShow(false); history.replaceState(null, "", " "); };
+  const close = () => { 
+    setShow(false); history.replaceState(null, "", " ");
+   };
   if (!show) return null;
 
   const mail = `mailto:bigyajeetkumarpatra@gmail.com?subject=Interview%20inquiry`;

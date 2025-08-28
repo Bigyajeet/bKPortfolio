@@ -1,4 +1,4 @@
-// src/components/LogoBK.jsx
+
 export default function LogoBK({ size = 28, title = "BK" }) {
   return (
     <svg
@@ -16,10 +16,10 @@ export default function LogoBK({ size = 28, title = "BK" }) {
         </linearGradient>
       </defs>
 
-      {/* Badge with gradient ring that adapts to theme colors */}
+
       <circle cx="32" cy="32" r="30" fill="var(--card)" stroke="url(#bkRing)" strokeWidth="2" />
 
-      {/* Very subtle “code” background */}
+ 
       <g
         opacity=".12"
         fill="currentColor"
@@ -32,15 +32,14 @@ export default function LogoBK({ size = 28, title = "BK" }) {
         <text x="46" y="46">/&gt;</text>
       </g>
 
-      {/* BK letters – inherit currentColor so they match var(--text) */}
       <g
         fill="currentColor"
         fontFamily="Inter, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif"
         fontWeight="800"
         fontSize="24"
       >
-        <text x="22" y="40">b</text>
-        <text x="36" y="40">k</text>
+        <text x="22" y="40">B</text>
+        <text x="36" y="40">K</text>
       </g>
     </svg>
   );

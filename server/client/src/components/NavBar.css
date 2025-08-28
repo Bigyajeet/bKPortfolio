@@ -1,13 +1,15 @@
 :root { --navH: 56px; }
 
-/* reserve space for the fixed bar */
-body { padding-top: var(--navH); }
+/* space for  bar */
+body {
+   padding-top: var(--navH);
+   }
 
-/* ===== BAR (fixed top overlay) ===== */
+/*BAR  */
 .navbar{
   position: fixed;
   top: 0; left: 0; right: 0;
-  z-index: 2147483000;              /* on top of everything */
+  z-index: 2147483000;              /* on top of Home */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   background: var(--nav-bg);
@@ -23,54 +25,99 @@ body { padding-top: var(--navH); }
   min-height: var(--navH);
 }
 
-/* ===== brand ===== */
-.navbar-brand{display:inline-flex;align-items:center;gap:8px;font-weight:800;color:var(--text);}
+/*  brand */
+.navbar-brand{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-weight:800;
+  color:var(--text);
+}
 .navbar-logoDot{
-  width:12px;height:12px;border-radius:999px;
+  width:12px;
+  height:12px;
+  border-radius:999px;
   background:linear-gradient(90deg,#2563eb,#22c55e,#f59e0b);
   box-shadow:0 0 0 3px rgba(37,99,235,.15);
 }
 
-/* ===== desktop links/actions ===== */
-.navbar-links{display:flex;gap:6px;margin-left:12px;}
-.navbar-links a{padding:8px 10px;border-radius:10px;color:var(--text);}
-.navbar-links a:hover{background:rgba(99,102,241,.08);}
-.navbar-links a.active{background:rgba(99,102,241,.12);color:#60a5fa;font-weight:600;box-shadow:inset 0 0 0 1px #2e3a67;}
-.navbar-actionsDesktop{margin-left:auto;display:flex;gap:10px;align-items:center;}
+/*  desktop actions  */
+.navbar-links{
+  display:flex;
+  gap:6px;
+  margin-left:12px;
+}
+.navbar-links a{
+  padding:8px 10px;
+  border-radius:10px;
+  color:var(--text);
+}
+.navbar-links a:hover{
+  background:rgba(99,102,241,.08);
+}
+.navbar-links a.active{
+  background:rgba(99,102,241,.12);
+  color:#60a5fa;
+  font-weight:600;
+  box-shadow:inset 0 0 0 1px #2e3a67;
+}
+.navbar-actionsDesktop{
+  margin-left:auto;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
 
-/* ===== hamburger ===== */
+/*  hamburger menu */
 .navbar-toggle{
   display:none;
   margin-left:auto;
-  height:36px; width:42px;
-  border-radius:8px; border:1px solid var(--chip-border);
+  height:36px;
+   width:42px;
+  border-radius:8px; 
+  border:1px solid var(--chip-border);
   background:var(--card); color:var(--text);
 }
 
-/* default hidden */
-.navbar-sheet{display:none;}
-.navbar-backdrop{display:none;}
 
-/* ===== desktop ===== */
-@media (min-width:861px){
-  .navbar-links, .navbar-actionsDesktop{display:flex;}
-  .navbar-toggle{display:none;}
-  .navbar-sheet, .navbar-backdrop{display:none !important;}
+.navbar-sheet{
+  display:none;
+}
+.navbar-backdrop{
+  display:none;
 }
 
-/* ===== mobile ===== */
-@media (max-width:860px){
-  .navbar-links, .navbar-actionsDesktop{display:none;}
-  .navbar-toggle{display:inline-flex;align-items:center;justify-content:center;}
 
-  /* Backdrop: full viewport below the bar */
+@media (min-width:861px){
+  .navbar-links, .navbar-actionsDesktop{
+    display:flex;
+  }
+  .navbar-toggle{
+    display:none;
+  }
+  .navbar-sheet, .navbar-backdrop{
+    display:none !important;
+  }
+}
+
+/*  mobile  */
+@media (max-width:860px){
+  .navbar-links, .navbar-actionsDesktop{
+    display:none;
+  }
+  .navbar-toggle{
+    display:inline-flex;
+    align-items:center;justify-content:center;
+  }
+
+  /* full viewport below the bar */
   .navbar[data-open="true"] .navbar-backdrop{
     display:block;
     position: fixed;
     left: 0; right: 0;
     top: var(--navH);
     height: calc(100dvh - var(--navH));
-    height: calc(100svh - var(--navH)); /* override when supported */
+    height: calc(100svh - var(--navH)); 
     background: rgba(0,0,0,.38);
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
@@ -78,7 +125,7 @@ body { padding-top: var(--navH); }
     z-index: 2147483001;
   }
 
-  /* Sheet: full viewport panel above everything */
+  
   .navbar[data-open="true"] .navbar-sheet{
     display:block;
     position: fixed;
@@ -93,8 +140,15 @@ body { padding-top: var(--navH); }
     z-index: 2147483002;
   }
 
-  .navbar-sheet a{display:block;padding:12px 10px;border-radius:10px;color:var(--text);}
-  .navbar-sheet a:hover{background:rgba(99,102,241,.08);}
+  .navbar-sheet a{
+    display:block;
+    padding:12px 10px;
+    border-radius:10px;
+    color:var(--text);
+  }
+  .navbar-sheet a:hover{
+    background:rgba(99,102,241,.08);
+  }
 
   .navbar-sheetActions{
     margin-top:12px;
