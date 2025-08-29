@@ -76,8 +76,8 @@ export default function Contact() {
       <h2>Contact</h2>
 
  
-      {status.kind === "ok" && <div className="banner ok">✅ {status.note}</div>}
-      {status.kind === "error" && <div className="banner error">⚠️ {status.note}</div>}
+      {status.kind === "ok" && <div className="banner ok"> {status.note}</div>}
+      {status.kind === "error" && <div className="banner error"> {status.note}</div>}
 
       <form className="contact-pro" onSubmit={submit} noValidate>
         <div className={`row-2`}>
@@ -102,7 +102,7 @@ export default function Contact() {
           <div className={`field ${touched.email && errors.email ? "has-error" : ""}`}>
             <label htmlFor="email">Email (optional)</label>
             <div className="input-wrap">
-              <span className="icon" aria-hidden>✉️</span>
+              <span className="icon" aria-hidden></span>
               <input
                 id="email"
                 type="email"
@@ -121,7 +121,7 @@ export default function Contact() {
         <div className={`field ${touched.message && errors.message ? "has-error" : ""}`}>
           <label htmlFor="message">Your message *</label>
           <div className="input-wrap textarea">
-            <span className="icon" aria-hidden>💬</span>
+            <span className="icon" aria-hidden></span>
             <textarea
               id="message"
               rows={6}

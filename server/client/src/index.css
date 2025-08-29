@@ -175,13 +175,22 @@ body.no-scroll { overflow: hidden; }
   display:flex; align-items:center; justify-content:space-between; padding:0 6px; color:#6b7280;
 }
 .switch .slider::after {
-  content:""; position:absolute; width:24px; height:24px; border-radius:999px;
+  content:""; 
+  position:absolute;
+   width:24px; 
+   height:24px; 
+   border-radius:999px;
   background: var(--card); box-shadow: 0 2px 8px rgba(0,0,0,.25);
   left:3px; top:3px; transition: transform .18s ease;
 }
-.switch input:checked + .slider::after { transform: translateX(24px); }
-.switch .icon { font-size:12px; opacity:.9; }
-/* Always hidden by default to avoid showing on desktop */
+.switch input:checked + .slider::after {
+   transform: translateX(24px); 
+  }
+.switch .icon { 
+  font-size:12px; 
+  opacity:.9; 
+}
+
 .nav-sheet {
   display: none !important;
 }

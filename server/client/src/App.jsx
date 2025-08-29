@@ -19,7 +19,7 @@ export default function App() {
   };
 
   const openResume = () => {
-    // If you want the same behavior as before (download)
+ 
     window.location.href = "/Bigyajeet_Kumar_PatraResume.pdf";
   };
 

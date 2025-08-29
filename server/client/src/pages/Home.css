@@ -1,4 +1,4 @@
-/* === Hero layout (theme-aware) === */
+
 .hero { 
   display:flex;
    align-items:center; 
@@ -76,7 +76,8 @@ a.btn, button.btn{
   display:inline-flex; 
   align-items:center;
    justify-content:center;
-    gap:8px; line-height:1;
+    gap:8px;
+     line-height:1;
   text-decoration:none;
 }
 
@@ -94,7 +95,7 @@ button.btn.btn-plain:hover, button.btn.btn-plain:focus-visible{
   background:rgba(99,102,241,.08);
 }
 
-/* ghost (transparent) */
+
 a.btn.btn-ghost, a.btn.btn-ghost:visited,
 button.btn.btn-ghost{
   background:transparent;
