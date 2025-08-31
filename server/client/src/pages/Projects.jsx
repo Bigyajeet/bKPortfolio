@@ -121,7 +121,7 @@ function Card({ r, i }) {
       </div>
 
       <div className="row" style={{ marginTop: 10 }}>
-        <a className="btn btn-plain" href={r.url} target="_blank" rel="noreferrer">Code</a>
+        <a className="btn btn-plain" href={r.url} target="_blank" rel="noreferrer">View Code</a>
         {r.demo && (
           <a className="btn btn-ghost" href={r.demo} target="_blank" rel="noreferrer">Live</a>
         )}
