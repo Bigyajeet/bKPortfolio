@@ -1,8 +1,7 @@
-
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
-import LogoBK from "./LogoBk";           
+import LogoBK from "./LogoBk";
 import "./NavBar.css";
 
 export default function NavBar({ onHire, onResume }) {
@@ -24,8 +23,14 @@ export default function NavBar({ onHire, onResume }) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const handleResume = () => { setOpen(false); onResume?.(); };
-  const handleHire = () => { setOpen(false); onHire?.(); };
+  const handleResume = () => {
+    setOpen(false);
+    onResume?.();
+  };
+  const handleHire = () => {
+    setOpen(false);
+    onHire?.();
+  };
 
   return (
     <nav className="navbar" data-open={open ? "true" : "false"}>
@@ -36,7 +41,9 @@ export default function NavBar({ onHire, onResume }) {
         </a>
 
         <div className="navbar-links">
-          <NavLink to="/" end>Home</NavLink>
+          <NavLink to="/" end>
+            Home
+          </NavLink>
           <NavLink to="/projects">Projects</NavLink>
           <NavLink to="/journal">Journal</NavLink>
           <NavLink to="/contact">Contact</NavLink>
@@ -44,47 +51,57 @@ export default function NavBar({ onHire, onResume }) {
 
         <div className="navbar-spacer" />
 
-       
         <div className="navbar-theme">
           <ThemeToggle />
         </div>
 
-  
         <div className="navbar-actionsDesktop">
-          <button type="button" className="chip" onClick={handleResume}>Resume</button>
-          <button type="button" className="btn btn-sm" onClick={handleHire}>Hire me</button>
+          <button type="button" className="chip" onClick={handleResume}>
+            Resume
+          </button>
+          <button type="button" className="btn btn-sm" onClick={handleHire}>
+            Hire me
+          </button>
         </div>
 
-       
         <button
           type="button"
           className="navbar-toggle"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-controls="navSheet"
           aria-expanded={open}
-          onClick={() => setOpen(v => !v)}
+          onClick={() => setOpen((v) => !v)}
         >
           {open ? "✕" : "☰"}
         </button>
       </div>
 
-     
       <div
         className="navbar-backdrop"
         aria-hidden="true"
         onClick={() => setOpen(false)}
       />
 
-
-      <div id="navSheet" className="navbar-sheet" role="dialog" aria-modal="true">
-        <NavLink to="/" end ref={firstLinkRef}>Home</NavLink>
+      <div
+        id="navSheet"
+        className="navbar-sheet"
+        role="dialog"
+        aria-modal="true"
+      >
+        <NavLink to="/" end ref={firstLinkRef}>
+          Home
+        </NavLink>
         <NavLink to="/projects">Projects</NavLink>
         <NavLink to="/journal">Journal</NavLink>
         <NavLink to="/contact">Contact</NavLink>
 
         <div className="navbar-sheetActions">
-          <button type="button" className="chip" onClick={handleResume}>Resume</button>
-          <button type="button" className="btn" onClick={handleHire}>Hire me</button>
+          <button type="button" className="chip" onClick={handleResume}>
+            Resume
+          </button>
+          <button type="button" className="btn" onClick={handleHire}>
+            Hire me
+          </button>
         </div>
       </div>
     </nav>

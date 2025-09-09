@@ -24,8 +24,8 @@ export default function Projects() {
         const data = await r.json();
 
         const mapped = (Array.isArray(data) ? data : [])
-          .filter(d => !d.fork)
-          .map(d => ({
+          .filter((d) => !d.fork)
+          .map((d) => ({
             id: d.id,
             name: d.name,
             desc: d.description || "",
@@ -38,7 +38,7 @@ export default function Projects() {
           }));
 
         setRepos(mapped);
-        setOrder(mapped.map(x => x.id));
+        setOrder(mapped.map((x) => x.id));
       } catch (e) {
         setErr(String(e?.message || e));
       } finally {
@@ -54,18 +54,24 @@ export default function Projects() {
   }, [repos]);
 
   const list = useMemo(
-    () => order.map(id => byId.get(id)).filter(Boolean),
+    () => order.map((id) => byId.get(id)).filter(Boolean),
     [order, byId]
   );
 
-  const onShuffle = () => setOrder(prev => shuffleArray(prev));
+  const onShuffle = () => setOrder((prev) => shuffleArray(prev));
 
   return (
     <section className="container">
       <div className="row head" style={{ alignItems: "center", gap: 12 }}>
         <h2 style={{ margin: 0 }}>Projects</h2>
-        <button className="btn" onClick={onShuffle}>Shuffle</button>
-        {!!err && <small className="error" style={{ color: "tomato" }}>GitHub: {err}</small>}
+        <button className="btn" onClick={onShuffle}>
+          Shuffle
+        </button>
+        {!!err && (
+          <small className="error" style={{ color: "tomato" }}>
+            GitHub: {err}
+          </small>
+        )}
       </div>
 
       {/* skeletons while loading */}
@@ -90,7 +96,9 @@ export default function Projects() {
             ))}
           </div>
 
-          {!list.length && !err && <p className="muted">No repositories yet.</p>}
+          {!list.length && !err && (
+            <p className="muted">No repositories yet.</p>
+          )}
         </>
       )}
     </section>
@@ -109,21 +117,36 @@ function Card({ r, i }) {
       <p className="pcard-desc">{r.desc || "No description yet."}</p>
 
       <div className="pcard-tags">
-        {(r.topics?.slice(0, 3) || []).map(t => (
-          <span key={t} className="chip">{t}</span>
+        {(r.topics?.slice(0, 3) || []).map((t) => (
+          <span key={t} className="chip">
+            {t}
+          </span>
         ))}
         {!r.topics?.length && <span className="chip">{r.lang}</span>}
       </div>
 
       <div className="pcard-meta">
-        
         <small className="muted">{updated.toLocaleDateString()}</small>
       </div>
 
       <div className="row" style={{ marginTop: 10 }}>
-        <a className="btn btn-plain" href={r.url} target="_blank" rel="noreferrer">View Code</a>
+        <a
+          className="btn btn-plain"
+          href={r.url}
+          target="_blank"
+          rel="noreferrer"
+        >
+          View Code
+        </a>
         {r.demo && (
-          <a className="btn btn-ghost" href={r.demo} target="_blank" rel="noreferrer">Live</a>
+          <a
+            className="btn btn-ghost"
+            href={r.demo}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Live
+          </a>
         )}
       </div>
     </article>

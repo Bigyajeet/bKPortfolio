@@ -1,14 +1,12 @@
-
-body.no-scroll { 
-  overflow: hidden; 
+body.no-scroll {
+  overflow: hidden;
 }
-
 
 .modal-backdrop {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(0,0,0,.55);
+  background: rgba(0, 0, 0, 0.55);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,5 +21,5 @@ body.no-scroll {
   max-width: 720px;
   width: 92%;
   padding: 20px;
-  box-shadow: 0 24px 80px rgba(0,0,0,.25);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
 }

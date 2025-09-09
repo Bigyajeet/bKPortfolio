@@ -11,7 +11,6 @@ import Contact from "./pages/Contact";
 import RecruiterModal from "./components/RecruiterModal";
 import ProfileLinks from "./components/ProfileLinks";
 
-
 export default function App() {
   const openRecruiter = () => {
     window.dispatchEvent(new CustomEvent("recruiter:open"));
@@ -19,7 +18,6 @@ export default function App() {
   };
 
   const openResume = () => {
- 
     window.location.href = "/Bigyajeet_Kumar_PatraResume.pdf";
   };
 

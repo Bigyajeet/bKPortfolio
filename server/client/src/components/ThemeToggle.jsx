@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import './ThemeToggle.css'
+import "./ThemeToggle.css";
 
 function getInitialTheme() {
   const saved = localStorage.getItem("theme");
